@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "324206692334",
+    "firebase_url": "https://sigmahome-ed8f2-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "sigmahome-ed8f2",
+    "storage_bucket": "sigmahome-ed8f2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:324206692334:android:9b307d26d7d5f887e8f0ff",
+        "android_client_info": {
+          "package_name": "com.example.sigma_home"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyATYMt0ridcAcV-mokJWCMMeg75jgWFkqs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
