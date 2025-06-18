@@ -8,6 +8,7 @@ class AddDevice extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final addDeviceC = Get.put(AddDeviceC());
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Add New switch"),
