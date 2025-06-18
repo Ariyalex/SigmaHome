@@ -28,7 +28,7 @@ class HomeScreen extends StatelessWidget {
           children: [
             Obx(
               () {
-                return buttonStatus.status.value
+                return !buttonStatus.status.value
                     ? OutlinedButton(
                         onPressed: () {
                           buttonStatus.buttonOnOff();
