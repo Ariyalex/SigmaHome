@@ -43,12 +43,44 @@ class _AuthTextFieldState extends State<AuthTextField> {
           TextField(
             controller: widget.controller,
             obscureText: widget.isPassword ? _obscureText : false,
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.normal,
+            ),
             decoration: InputDecoration(
               hintText: widget.hintText,
               hintStyle: const TextStyle(
                 color: AppTheme.defaultTextColor,
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(
+                  width: 1,
+                  color: Color(0xffC5C6CC),
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(
+                  width: 1.5,
+                  color: AppTheme.primaryColor,
+                ),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(
+                  width: 1,
+                  color: AppTheme.errorColor,
+                ),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(
+                  width: 1.5,
+                  color: AppTheme.errorColor,
+                ),
               ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),

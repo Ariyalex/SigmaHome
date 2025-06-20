@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/instance_manager.dart';
-import 'package:get/utils.dart';
+import 'package:get/get.dart';
 import 'package:sigma_home/src/controllers/auth_controller.dart';
+import 'package:sigma_home/src/routes/route_named.dart';
 import 'package:sigma_home/src/theme/theme.dart';
 import 'package:sigma_home/src/widgets/fill_button.dart';
 import 'package:sigma_home/src/widgets/text_field.dart';
@@ -32,7 +32,10 @@ class SignIn extends StatelessWidget {
             children: [
               const Text(
                 "SigmaHome",
-                style: TextStyle(fontSize: 44, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    fontSize: 44,
+                    fontWeight: FontWeight.bold,
+                    color: AppTheme.textColor),
               ),
               Column(
                 mainAxisSize: MainAxisSize.min,
@@ -67,7 +70,7 @@ class SignIn extends StatelessWidget {
                           controller: authC.password,
                           isPassword: true,
                           labelText: "Password",
-                          hintText: "contoh@mail.com",
+                          hintText: "ex: user123",
                         ),
                         Column(
                           children: [
@@ -78,7 +81,9 @@ class SignIn extends StatelessWidget {
                             ),
                             FillButton(
                               content: "Forgot Password?",
-                              onPressed: () {},
+                              onPressed: () {
+                                Get.toNamed(RouteNamed.forgotPass);
+                              },
                               buttonType: ButtonType.text,
                             )
                           ],
@@ -90,7 +95,10 @@ class SignIn extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     spacing: 10,
                     children: [
-                      Text("Or sign in with"),
+                      const Text(
+                        "-Or sign in with-",
+                        style: AppTheme.h3,
+                      ),
                       InkWell(
                         borderRadius: BorderRadius.circular(10),
                         splashColor: AppTheme.accentColor,
@@ -134,6 +142,7 @@ class SignIn extends StatelessWidget {
                           ),
                         ),
                       ),
+                      //navigasi sign up
                       RichText(
                         textAlign: TextAlign.center,
                         text: TextSpan(
@@ -146,7 +155,7 @@ class SignIn extends StatelessWidget {
                               baseline: TextBaseline.alphabetic,
                               child: TextButton(
                                 onPressed: () {
-                                  // Get.toNamed(RouteNamed.signUpScreen);
+                                  Get.toNamed(RouteNamed.signUp);
                                 },
                                 child: const Text(
                                   "Sign up",
