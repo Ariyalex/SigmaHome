@@ -54,7 +54,7 @@ class ForgotPass extends StatelessWidget {
                         const SizedBox(
                           width: double.infinity,
                           child: Text(
-                            "Reset yout password",
+                            "Reset your password",
                             style: AppTheme.h3,
                           ),
                         ),
