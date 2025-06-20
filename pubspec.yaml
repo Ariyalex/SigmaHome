@@ -14,6 +14,7 @@ dependencies:
   firebase_database: ^11.3.5
   flutter:
     sdk: flutter
+  font_awesome_flutter: ^10.8.0
   get: ^4.7.2
 
 dev_dependencies:
@@ -28,3 +29,10 @@ flutter:
   assets:
     # Add assets from the images directory to the application.
     - assets/images/
+  
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: fonts/Inter_Regular.ttf
+        - asset: fonts/Inter_Bold.ttf
+          weight: 700

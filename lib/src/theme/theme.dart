@@ -11,9 +11,29 @@ abstract final class AppTheme {
   static const onDefaultColor = Color(0xff71727A);
 
   static const textColor = Color(0xff2F3036);
+  static const defaultTextColor = Color(0xff8F9098);
+
+  static const h5 = TextStyle(
+    color: textColor,
+    fontSize: 12,
+    fontWeight: FontWeight.w700,
+  );
+
+  static const h3 = TextStyle(
+    color: textColor,
+    fontSize: 16,
+    fontWeight: FontWeight.w800,
+  );
+
+  static const bodyM = TextStyle(
+    color: Colors.black,
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+  );
 
   static ThemeData light = ThemeData(
     useMaterial3: true,
+    fontFamily: "Inter",
     colorScheme: const ColorScheme(
       brightness: Brightness.light,
       primary: primaryColor,
@@ -25,7 +45,7 @@ abstract final class AppTheme {
       error: errorColor,
       onError: Colors.white,
       surface: surfaceColor,
-      onSurface: textColor,
+      onSurface: Colors.black,
     ),
   );
 }
