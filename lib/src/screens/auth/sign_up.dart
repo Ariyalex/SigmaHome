@@ -135,7 +135,7 @@ class SignUp extends StatelessWidget {
                               ],
                             ),
                             FillButton(
-                              content: "Sign In",
+                              content: "Sign Up",
                               onPressed: () {},
                               buttonType: ButtonType.filled,
                             ),
