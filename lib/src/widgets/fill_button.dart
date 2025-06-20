@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sigma_home/src/theme/theme.dart';
 
 enum ButtonType {
   filled,
@@ -45,7 +46,19 @@ class FillButton extends StatelessWidget {
       case ButtonType.outlined:
         return OutlinedButton(
           onPressed: onPressed,
-          style: commonStyle,
+          style: commonStyle.copyWith(
+            shape: WidgetStateProperty.all(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            side: WidgetStateProperty.all(
+              const BorderSide(
+                color: AppTheme.primaryColor,
+                width: 1.5,
+              ),
+            ),
+          ),
           child: Text(content!),
         );
     }
