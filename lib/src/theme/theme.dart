@@ -25,6 +25,24 @@ abstract final class AppTheme {
     fontWeight: FontWeight.w800,
   );
 
+  static const h2 = TextStyle(
+    color: textColor,
+    fontSize: 18,
+    fontWeight: FontWeight.w800,
+  );
+
+  static const h1 = TextStyle(
+    color: textColor,
+    fontSize: 24,
+    fontWeight: FontWeight.w800,
+  );
+
+  static const actionS = TextStyle(
+    color: onDefaultColor,
+    fontSize: 10,
+    fontWeight: FontWeight.w600,
+  );
+
   static const bodyM = TextStyle(
     color: Colors.black,
     fontSize: 14,
