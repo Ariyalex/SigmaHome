@@ -49,6 +49,12 @@ abstract final class AppTheme {
     fontWeight: FontWeight.w400,
   );
 
+  static const bodyS = TextStyle(
+    color: Colors.black,
+    fontSize: 12,
+    fontWeight: FontWeight.w400,
+  );
+
   static ThemeData light = ThemeData(
     useMaterial3: true,
     fontFamily: "Inter",
