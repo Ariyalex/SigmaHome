@@ -2,8 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sigma_home/src/providers/button_provider.dart';
 import 'package:sigma_home/src/theme/theme.dart';
+import 'package:sigma_home/src/widgets/fill_button.dart';
+import 'package:sigma_home/src/widgets/room.dart';
 import 'package:sigma_home/src/widgets/search.dart';
 import 'package:weather_icons/weather_icons.dart';
+
+//dummy
+List<String> roomName = [
+  "Living room",
+  "Living room",
+  "Terace",
+  "Bathroom",
+  "Kitchen",
+  "Bed room",
+];
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({
@@ -13,6 +25,8 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final buttonStatus = Get.put(ButtonProvider());
+
+    final searchC = TextEditingController();
 
     final mediaQueryWidth = MediaQuery.of(context).size.width;
     final mediaQueryHeight = MediaQuery.of(context).size.height;
@@ -115,7 +129,46 @@ class HomeScreen extends StatelessWidget {
               child: Search(
                 icon: Icon(Icons.search),
                 hint: "Search Device",
-                textController: TextEditingController(),
+                textController: searchC,
+                onPressed: () {},
+              ),
+            ),
+            Container(
+              width: mediaQueryWidth,
+              height: 40,
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: roomName.length,
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return InkWell(
+                    splashColor: AppTheme.accentColor,
+                    borderRadius: BorderRadius.circular(10),
+                    onTap: () => buttonStatus.activeRoomIndex(index),
+                    child: Obx(() => Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Room(
+                            name: roomName[index],
+                            isActive:
+                                index == buttonStatus.activeRoomIndex.value,
+                          ),
+                        )),
+                  );
+                },
+              ),
+            ),
+            Expanded(
+              child: Container(
+                color: Colors.amber,
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(bottom: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 22),
+              child: FillButton(
+                content: "ADD NEW DEVICE",
+                color: Color(0xff2897FF),
                 onPressed: () {},
               ),
             )
