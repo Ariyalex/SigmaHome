@@ -25,6 +25,12 @@ abstract final class AppTheme {
     fontWeight: FontWeight.w800,
   );
 
+  static const h4 = TextStyle(
+    color: textColor,
+    fontSize: 14,
+    fontWeight: FontWeight.w700,
+  );
+
   static const h2 = TextStyle(
     color: textColor,
     fontSize: 18,
