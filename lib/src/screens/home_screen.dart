@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sigma_home/src/providers/button_provider.dart';
 import 'package:sigma_home/src/theme/theme.dart';
+import 'package:sigma_home/src/widgets/search.dart';
 import 'package:weather_icons/weather_icons.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -64,7 +65,7 @@ class HomeScreen extends StatelessWidget {
                         borderRadius: BorderRadiusGeometry.circular(16),
                       ),
                     ),
-                    child: Image.asset('assets/images/roblox_profile.jpg'),
+                    child: Image.asset('assets/images/profile.jpg'),
                   )
                 ],
               ),
@@ -107,6 +108,15 @@ class HomeScreen extends StatelessWidget {
                     ],
                   )
                 ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 22),
+              child: Search(
+                icon: Icon(Icons.search),
+                hint: "Search Device",
+                textController: TextEditingController(),
+                onPressed: () {},
               ),
             )
           ],

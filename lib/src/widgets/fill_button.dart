@@ -8,8 +8,8 @@ enum ButtonType {
 }
 
 class FillButton extends StatelessWidget {
-  final String? content;
-  final VoidCallback? onPressed;
+  final String content;
+  final VoidCallback onPressed;
   final ButtonType buttonType;
 
   const FillButton(
