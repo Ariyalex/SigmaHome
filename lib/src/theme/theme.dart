@@ -10,6 +10,8 @@ abstract final class AppTheme {
   static const defaultColor = Color(0xffE8E9F1);
   static const onDefaultColor = Color(0xff71727A);
 
+  static const iconColor = Color(0xff2897FF);
+
   static const textColor = Color(0xff2F3036);
   static const defaultTextColor = Color(0xff8F9098);
 
@@ -58,6 +60,12 @@ abstract final class AppTheme {
   static const bodyS = TextStyle(
     color: Colors.black,
     fontSize: 12,
+    fontWeight: FontWeight.w400,
+  );
+
+  static const bodyXL = TextStyle(
+    color: Colors.black,
+    fontSize: 18,
     fontWeight: FontWeight.w400,
   );
 

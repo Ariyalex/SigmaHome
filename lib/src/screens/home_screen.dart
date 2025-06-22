@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sigma_home/src/providers/button_provider.dart';
 import 'package:sigma_home/src/theme/theme.dart';
+import 'package:sigma_home/src/widgets/device.dart';
 import 'package:sigma_home/src/widgets/fill_button.dart';
 import 'package:sigma_home/src/widgets/room.dart';
 import 'package:sigma_home/src/widgets/search.dart';
@@ -33,10 +34,16 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        scrolledUnderElevation: 0,
+        backgroundColor: Colors.transparent,
+        title: const Text(
+          'SigmaHome',
+          style: AppTheme.h1,
+        ),
         actions: [
           IconButton(
             onPressed: () {},
-            icon: Icon(
+            icon: const Icon(
               Icons.menu_rounded,
               color: AppTheme.primaryColor,
             ),
@@ -160,7 +167,22 @@ class HomeScreen extends StatelessWidget {
             ),
             Expanded(
               child: Container(
-                color: Colors.amber,
+                padding: const EdgeInsets.symmetric(horizontal: 18),
+                child: GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 18.0,
+                    mainAxisSpacing: 18.0,
+                    childAspectRatio: 1,
+                  ),
+                  itemCount: 6,
+                  itemBuilder: (context, index) {
+                    return Device(
+                      icon: Icons.lightbulb_outline,
+                      name: "Device ${index + 1}",
+                    );
+                  },
+                ),
               ),
             ),
             Container(
