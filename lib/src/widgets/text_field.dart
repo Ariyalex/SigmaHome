@@ -32,6 +32,7 @@ class _AuthTextFieldState extends State<AuthTextField> {
   Widget build(BuildContext context) {
     return Flexible(
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           SizedBox(
             width: double.infinity,

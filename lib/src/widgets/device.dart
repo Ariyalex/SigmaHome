@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sigma_home/src/theme/theme.dart';
+import 'package:sigma_home/src/widgets/my_switch.dart';
 
 class Device extends StatefulWidget {
   final bool isOn;
@@ -59,17 +60,16 @@ class _DeviceState extends State<Device> {
                       style: AppTheme.bodyXL
                           .copyWith(color: AppTheme.secondaryColor),
                     ),
-                    Switch(
-                        value: _isOn,
-                        activeTrackColor: AppTheme.secondaryColor,
-                        activeColor: Colors.white,
-                        inactiveTrackColor: const Color(0xffC5C6CC),
-                        inactiveThumbColor: Colors.white,
-                        trackOutlineColor:
-                            WidgetStateProperty.all(AppTheme.secondaryColor),
-                        onChanged: (value) => setState(() {
-                              _isOn = value;
-                            }))
+                    Myswitch(
+                      isOn: _isOn,
+                      onChanged: (value) {
+                        setState(
+                          () {
+                            _isOn = value;
+                          },
+                        );
+                      },
+                    )
                   ],
                 )
               ],
@@ -105,19 +105,15 @@ class _DeviceState extends State<Device> {
                       style: AppTheme.bodyXL
                           .copyWith(color: AppTheme.defaultTextColor),
                     ),
-                    Switch(
-                      value: _isOn,
-                      inactiveTrackColor: const Color(0xffC5C6CC),
-                      inactiveThumbColor: Colors.white,
-                      activeTrackColor: AppTheme.secondaryColor,
-                      activeColor: Colors.white,
-                      trackOutlineColor:
-                          WidgetStateProperty.all(const Color(0xffC5C6CC)),
-                      onChanged: (value) => setState(
-                        () {
-                          _isOn = value;
-                        },
-                      ),
+                    Myswitch(
+                      isOn: _isOn,
+                      onChanged: (value) {
+                        setState(
+                          () {
+                            _isOn = value;
+                          },
+                        );
+                      },
                     )
                   ],
                 )
