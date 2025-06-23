@@ -19,7 +19,7 @@ class SignIn extends StatelessWidget {
 
     return Scaffold(
       body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 24),
+        padding: const EdgeInsets.symmetric(horizontal: 24),
         height: mediaQueryHeight,
         width: mediaQueryWidth,
         child: Padding(

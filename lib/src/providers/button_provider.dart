@@ -3,6 +3,7 @@ import 'package:firebase_database/firebase_database.dart';
 
 class ButtonProvider extends GetxController {
   var status = true.obs;
+  var activeRoomIndex = 0.obs;
 
   final DatabaseReference _relayRef =
       FirebaseDatabase.instance.ref("kontrol/relay");
@@ -31,5 +32,9 @@ class ButtonProvider extends GetxController {
     }
 
     //update ke firebase secera realtime
+  }
+
+  void setActiveRoom(int index) {
+    activeRoomIndex.value = index;
   }
 }

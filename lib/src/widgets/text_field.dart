@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:sigma_home/src/theme/theme.dart';
 
 class AuthTextField extends StatefulWidget {
-  final TextEditingController? controller;
-  final String? labelText;
-  final String? hintText;
+  final TextEditingController controller;
+  final String labelText;
+  final String hintText;
   final bool isPassword;
 
   const AuthTextField({
@@ -32,10 +32,11 @@ class _AuthTextFieldState extends State<AuthTextField> {
   Widget build(BuildContext context) {
     return Flexible(
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           SizedBox(
             width: double.infinity,
-            child: Text(widget.labelText!, style: AppTheme.h5),
+            child: Text(widget.labelText, style: AppTheme.h5),
           ),
           const SizedBox(
             height: 8,

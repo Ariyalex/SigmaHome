@@ -16,6 +16,8 @@ dependencies:
     sdk: flutter
   font_awesome_flutter: ^10.8.0
   get: ^4.7.2
+  modal_bottom_sheet: ^3.0.0
+  weather_icons: ^3.0.0
 
 dev_dependencies:
   flutter_test:
@@ -33,6 +35,6 @@ flutter:
   fonts:
     - family: Inter
       fonts:
-        - asset: fonts/Inter_Regular.ttf
-        - asset: fonts/Inter_Bold.ttf
+        - asset: assets/fonts/Inter_Regular.ttf
+        - asset: assets/fonts/Inter_Bold.ttf
           weight: 700
