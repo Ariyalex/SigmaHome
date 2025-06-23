@@ -8,19 +8,23 @@ enum ButtonType {
 }
 
 class FillButton extends StatelessWidget {
-  final String? content;
-  final VoidCallback? onPressed;
+  final String content;
+  final VoidCallback onPressed;
   final ButtonType buttonType;
+  final Color color;
 
-  const FillButton(
-      {super.key,
-      required this.content,
-      required this.onPressed,
-      this.buttonType = ButtonType.filled});
+  const FillButton({
+    super.key,
+    required this.content,
+    required this.onPressed,
+    this.color = AppTheme.primaryColor,
+    this.buttonType = ButtonType.filled,
+  });
 
   @override
   Widget build(BuildContext context) {
     final commonStyle = ButtonStyle(
+        backgroundColor: WidgetStateProperty.all(color),
         minimumSize: WidgetStateProperty.all(
           const Size(double.infinity, 39),
         ),
@@ -35,13 +39,13 @@ class FillButton extends StatelessWidget {
         return FilledButton(
           onPressed: onPressed,
           style: commonStyle,
-          child: Text(content!),
+          child: Text(content),
         );
       case ButtonType.text:
         return TextButton(
           onPressed: onPressed,
           style: commonStyle,
-          child: Text(content!),
+          child: Text(content),
         );
       case ButtonType.outlined:
         return OutlinedButton(
@@ -59,7 +63,7 @@ class FillButton extends StatelessWidget {
               ),
             ),
           ),
-          child: Text(content!),
+          child: Text(content),
         );
     }
   }

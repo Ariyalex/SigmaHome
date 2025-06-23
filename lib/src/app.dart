@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sigma_home/src/routes/page_route.dart';
-import 'package:sigma_home/src/screens/auth/sign_in.dart';
 import 'package:sigma_home/src/screens/home_screen.dart';
 import 'package:sigma_home/src/theme/theme.dart';
 
@@ -13,8 +12,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      // home: HomeScreen(),
-      home: SignIn(),
+      home: HomeScreen(),
       theme: AppTheme.light,
       getPages: AppPage.pages,
     );
