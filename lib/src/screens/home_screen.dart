@@ -3,7 +3,9 @@ import 'package:get/get.dart';
 import 'package:sigma_home/src/providers/button_provider.dart';
 import 'package:sigma_home/src/theme/theme.dart';
 import 'package:sigma_home/src/widgets/device.dart';
+import 'package:sigma_home/src/widgets/edit_profile.dart';
 import 'package:sigma_home/src/widgets/fill_button.dart';
+import 'package:sigma_home/src/widgets/filter_button.dart';
 import 'package:sigma_home/src/widgets/room.dart';
 import 'package:sigma_home/src/widgets/search.dart';
 import 'package:weather_icons/weather_icons.dart';
@@ -33,19 +35,72 @@ class HomeScreen extends StatelessWidget {
     final mediaQueryHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         scrolledUnderElevation: 0,
-        backgroundColor: Colors.transparent,
         title: const Text(
           'SigmaHome',
           style: AppTheme.h1,
         ),
         actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.menu_rounded,
-              color: AppTheme.primaryColor,
+          Builder(
+            builder: (context) => PopupMenuButton<String>(
+              icon: const Icon(
+                Icons.menu,
+                color: AppTheme.iconColor,
+              ), // Burger Icon
+              onSelected: (value) {
+                if (value == "device") {
+                  // Get.toNamed(RouteNamed.guideGeneral);
+                } else if (value == "profile") {
+                  // _logout(context);
+                } else if (value == "about") {
+                  // clearAllData(context);
+                } else if (value == "logout") {
+                  //masukkan di sini
+                }
+              },
+
+              position: PopupMenuPosition.under,
+              itemBuilder: (BuildContext context) => [
+                const PopupMenuItem<String>(
+                  value: "device",
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.add,
+                      color: AppTheme.iconColor,
+                    ),
+                    title: Text("Add Device"),
+                  ),
+                ),
+                const PopupMenuItem<String>(
+                  value: "profile",
+                  child: EditProfile(),
+                ),
+                const PopupMenuItem<String>(
+                  value: "about",
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.info_outline,
+                      color: AppTheme.iconColor,
+                    ),
+                    title: Text("About"),
+                  ),
+                ),
+                const PopupMenuItem<String>(
+                  value: "logout",
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.logout,
+                      color: AppTheme.errorColor,
+                    ),
+                    title: Text(
+                      "Log out",
+                      style: TextStyle(color: AppTheme.errorColor),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -133,11 +188,20 @@ class HomeScreen extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 22),
-              child: Search(
-                icon: Icon(Icons.search),
-                hint: "Search Device",
-                textController: searchC,
-                onPressed: () {},
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Flexible(flex: 3, child: FilterButton()),
+                  Flexible(
+                    flex: 6,
+                    child: Search(
+                      icon: Icon(Icons.search),
+                      hint: "Search Device",
+                      textController: searchC,
+                      onPressed: () {},
+                    ),
+                  ),
+                ],
               ),
             ),
             Container(

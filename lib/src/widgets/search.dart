@@ -32,6 +32,8 @@ class Search extends StatelessWidget {
           ),
           Expanded(
             child: TextField(
+              autofocus: false,
+              focusNode: FocusNode(),
               controller: textController,
               decoration: InputDecoration(
                 hintText: hint,
