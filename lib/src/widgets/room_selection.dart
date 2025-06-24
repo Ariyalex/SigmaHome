@@ -1,55 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:sigma_home/src/controllers/text_controller.dart';
 import 'package:sigma_home/src/theme/theme.dart';
+import 'package:textfield_search/textfield_search.dart';
 
-class AuthTextField extends StatefulWidget {
-  final TextEditingController controller;
-  final String labelText;
-  final String hintText;
-  final bool isPassword;
+List<String> roomName = [
+  "Living room",
+  "Terace",
+  "Bathroom",
+  "Kitchen",
+  "Bed room",
+];
 
-  const AuthTextField({
-    super.key,
-    required this.labelText,
-    required this.hintText,
-    required this.controller,
-    this.isPassword = false,
-  });
-
-  @override
-  State<AuthTextField> createState() => _AuthTextFieldState();
-}
-
-class _AuthTextFieldState extends State<AuthTextField> {
-  bool _obscureText = true;
-
-  void _togglePasswordVisibility() {
-    setState(() {
-      _obscureText = !_obscureText;
-    });
-  }
+class RoomSelection extends StatelessWidget {
+  const RoomSelection({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final addDeviceC = Get.find<AddDeviceC>();
+
     return Flexible(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
+        spacing: 8,
         children: [
-          SizedBox(
-            width: double.infinity,
-            child: Text(widget.labelText, style: AppTheme.h5),
-          ),
-          const SizedBox(
-            height: 8,
-          ),
-          TextField(
-            controller: widget.controller,
-            obscureText: widget.isPassword ? _obscureText : false,
-            style: const TextStyle(
+          const Text("Ruangan", style: AppTheme.h5),
+          TextFieldSearch(
+            initialList: roomName,
+            label: "Kamar",
+            controller: addDeviceC.ruanganC,
+            textStyle: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.normal,
             ),
             decoration: InputDecoration(
-              hintText: widget.hintText,
+              hintText: "Ruangan",
               hintStyle: const TextStyle(
                 color: AppTheme.defaultTextColor,
                 fontSize: 14,
@@ -92,16 +78,11 @@ class _AuthTextFieldState extends State<AuthTextField> {
               ),
               filled: true,
               fillColor: Colors.white,
-              suffixIcon: widget.isPassword
-                  ? IconButton(
-                      onPressed: _togglePasswordVisibility,
-                      icon: Icon(
-                        _obscureText ? Icons.visibility_off : Icons.visibility,
-                        color: AppTheme.onDefaultColor,
-                      ),
-                    )
-                  : const SizedBox.shrink(),
             ),
+          ),
+          const Text(
+            "*tambahkan ruangan baru atau pilih ruangan yang sudah ada",
+            style: AppTheme.actionS,
           ),
         ],
       ),

@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:sigma_home/src/controllers/text_controller.dart';
-import 'package:sigma_home/src/providers/add_switch.dart';
+import 'package:sigma_home/src/providers/add_device.dart';
 import 'package:sigma_home/src/theme/theme.dart';
 import 'package:sigma_home/src/widgets/device_type.dart';
+import 'package:sigma_home/src/widgets/generate_device_id.dart';
+import 'package:sigma_home/src/widgets/room_selection.dart';
+import 'package:sigma_home/src/widgets/text_field_support.dart';
 
 final List<Map<String, dynamic>> deviceTypes = [
   {'icon': LucideIcons.fan300, 'name': 'Kipas'},
@@ -21,14 +24,18 @@ class AddDevice extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final addDeviceC = Get.put(AddDeviceC());
-    final addDevice = Get.put(AddSwitch());
+    final addDevice = Get.put(AddDeviceProvider());
+
     final mediaQueryWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Add New Switch"),
+        actions: [],
       ),
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        spacing: 24,
         children: [
           Container(
             width: mediaQueryWidth,
@@ -65,8 +72,47 @@ class AddDevice extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 20),
-          const SizedBox(height: 10),
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 20),
+            padding: EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              border: BoxBorder.all(
+                color: Color(0xffD4D6DD),
+              ),
+            ),
+            child: Column(
+              spacing: 20,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFieldSupport(
+                  labelText: "Nama Device",
+                  hintText: "Ex: lampu fufufafa",
+                  suportText: "*Berikan device nama",
+                  controller: TextEditingController(),
+                ),
+                RoomSelection(),
+              ],
+            ),
+          ),
+          OutlinedButton(
+            style: ButtonStyle(
+              side: WidgetStateProperty.all(
+                const BorderSide(
+                  color: AppTheme.primaryColor,
+                  width: 1.5,
+                ),
+              ),
+              shape: WidgetStateProperty.all(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
+            onPressed: () {},
+            child: Text("Generate Device ID"),
+          ),
+          GenerateDeviceId(),
         ],
       ),
     );

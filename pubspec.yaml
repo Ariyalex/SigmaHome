@@ -10,6 +10,7 @@ environment:
   sdk: ^3.5.3
 
 dependencies:
+  dropdown_search: ^6.0.2
   firebase_core: ^3.13.0
   firebase_database: ^11.3.5
   flutter:
@@ -18,6 +19,7 @@ dependencies:
   get: ^4.7.2
   lucide_icons_flutter: ^3.0.5
   modal_bottom_sheet: ^3.0.0
+  textfield_search: ^0.11.1
   weather_icons: ^3.0.0
 
 dev_dependencies:

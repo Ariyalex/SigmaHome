@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sigma_home/src/theme/theme.dart';
-import 'package:sigma_home/src/widgets/auth_text_field.dart';
+import 'package:sigma_home/src/widgets/my_text_field.dart';
+import 'package:sigma_home/src/widgets/photo_profile.dart';
+import 'package:sigma_home/src/widgets/text_field_support.dart';
 
 class EditProfile extends StatefulWidget {
   const EditProfile({super.key});
@@ -47,13 +49,11 @@ class _EditProfileState extends State<EditProfile> {
                 SizedBox(
                   height: 10,
                 ),
-                AuthTextField(
-                    labelText: "New Name",
-                    hintText: "new name",
-                    controller: TextEditingController()),
-                Text(
-                  "*Ganti nama menjadi nama yang baru",
-                  style: AppTheme.actionS,
+                TextFieldSupport(
+                  labelText: "New Name",
+                  hintText: "new name",
+                  suportText: "*Ganti nama menjadi nama yang baru",
+                  controller: TextEditingController(),
                 ),
                 SizedBox(
                   height: 10,
@@ -67,16 +67,9 @@ class _EditProfileState extends State<EditProfile> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Container(
-                        width: 70,
-                        height: 70,
-                        clipBehavior: Clip.antiAlias,
-                        decoration: ShapeDecoration(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadiusGeometry.circular(32),
-                          ),
-                        ),
-                        child: Image.asset('assets/images/profile.jpg'),
+                      PhotoProfile(
+                        size: 70,
+                        borderRadius: 32,
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,

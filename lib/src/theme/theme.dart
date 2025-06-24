@@ -57,6 +57,12 @@ abstract final class AppTheme {
     fontWeight: FontWeight.w400,
   );
 
+  static const bodyL = TextStyle(
+    color: Colors.black,
+    fontSize: 16,
+    fontWeight: FontWeight.w400,
+  );
+
   static const bodyS = TextStyle(
     color: Colors.black,
     fontSize: 12,

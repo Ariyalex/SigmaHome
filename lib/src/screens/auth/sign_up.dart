@@ -6,7 +6,7 @@ import 'package:sigma_home/src/routes/route_named.dart';
 import 'package:sigma_home/src/theme/theme.dart';
 import 'package:sigma_home/src/widgets/check_box.dart';
 import 'package:sigma_home/src/widgets/fill_button.dart';
-import 'package:sigma_home/src/widgets/auth_text_field.dart';
+import 'package:sigma_home/src/widgets/my_text_field.dart';
 
 class SignUp extends StatelessWidget {
   const SignUp({super.key});
@@ -69,23 +69,23 @@ class SignUp extends StatelessWidget {
                             style: AppTheme.h3,
                           ),
                         ),
-                        AuthTextField(
+                        MyTextField(
                           controller: authC.email,
                           labelText: "Email",
                           hintText: "contoh@mail.com",
                         ),
-                        AuthTextField(
+                        MyTextField(
                           controller: authC.username,
                           labelText: "Username",
                           hintText: "new username",
                         ),
-                        AuthTextField(
+                        MyTextField(
                           controller: authC.password,
                           isPassword: true,
                           labelText: "Password",
                           hintText: "new password",
                         ),
-                        AuthTextField(
+                        MyTextField(
                           controller: authC.confirmPass,
                           isPassword: true,
                           labelText: "Confirm password",
