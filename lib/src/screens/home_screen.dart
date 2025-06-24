@@ -7,6 +7,7 @@ import 'package:sigma_home/src/widgets/device.dart';
 import 'package:sigma_home/src/widgets/edit_profile.dart';
 import 'package:sigma_home/src/widgets/fill_button.dart';
 import 'package:sigma_home/src/widgets/filter_button.dart';
+import 'package:sigma_home/src/widgets/photo_profile.dart';
 import 'package:sigma_home/src/widgets/room.dart';
 import 'package:sigma_home/src/widgets/search.dart';
 import 'package:weather_icons/weather_icons.dart';
@@ -133,17 +134,7 @@ class HomeScreen extends StatelessWidget {
                       )
                     ],
                   ),
-                  Container(
-                    width: 40,
-                    height: 40,
-                    clipBehavior: Clip.antiAlias,
-                    decoration: ShapeDecoration(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadiusGeometry.circular(16),
-                      ),
-                    ),
-                    child: Image.asset('assets/images/profile.jpg'),
-                  )
+                  PhotoProfile(),
                 ],
               ),
             ),
