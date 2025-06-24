@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:sigma_home/src/theme/theme.dart';
-import 'package:sigma_home/src/widgets/fill_button.dart';
 import 'package:sigma_home/src/widgets/my_switch.dart';
 
 class FilterModal extends StatefulWidget {

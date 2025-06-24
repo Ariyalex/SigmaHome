@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sigma_home/src/theme/theme.dart';
-import 'package:sigma_home/src/widgets/text_field.dart';
+import 'package:sigma_home/src/widgets/auth_text_field.dart';
 
 class EditProfile extends StatefulWidget {
   const EditProfile({super.key});
