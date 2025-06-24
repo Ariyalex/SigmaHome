@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:sigma_home/src/controllers/auth_controller.dart';
 import 'package:sigma_home/src/theme/theme.dart';
 import 'package:sigma_home/src/widgets/fill_button.dart';
-import 'package:sigma_home/src/widgets/text_field.dart';
+import 'package:sigma_home/src/widgets/auth_text_field.dart';
 
 class ForgotPass extends StatelessWidget {
   const ForgotPass({super.key});

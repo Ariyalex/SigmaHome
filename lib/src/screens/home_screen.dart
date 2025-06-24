@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sigma_home/src/providers/button_provider.dart';
+import 'package:sigma_home/src/routes/route_named.dart';
 import 'package:sigma_home/src/theme/theme.dart';
 import 'package:sigma_home/src/widgets/device.dart';
 import 'package:sigma_home/src/widgets/edit_profile.dart';
@@ -255,7 +256,9 @@ class HomeScreen extends StatelessWidget {
               child: FillButton(
                 content: "ADD NEW DEVICE",
                 color: Color(0xff2897FF),
-                onPressed: () {},
+                onPressed: () {
+                  Get.toNamed(RouteNamed.addDevice);
+                },
               ),
             )
           ],
