@@ -24,7 +24,6 @@ class FillButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final commonStyle = ButtonStyle(
-        backgroundColor: WidgetStateProperty.all(color),
         minimumSize: WidgetStateProperty.all(
           const Size(double.infinity, 39),
         ),
@@ -38,7 +37,9 @@ class FillButton extends StatelessWidget {
       case ButtonType.filled:
         return FilledButton(
           onPressed: onPressed,
-          style: commonStyle,
+          style: commonStyle.copyWith(
+            backgroundColor: WidgetStateProperty.all(color),
+          ),
           child: Text(content),
         );
       case ButtonType.text:

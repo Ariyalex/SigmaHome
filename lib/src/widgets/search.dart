@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sigma_home/src/theme/theme.dart';
 
-class Search extends StatelessWidget {
+class Search extends StatefulWidget {
   final Icon icon;
   final VoidCallback onPressed;
   final TextEditingController textController;
@@ -16,6 +16,28 @@ class Search extends StatelessWidget {
   });
 
   @override
+  State<Search> createState() => _SearchState();
+}
+
+class _SearchState extends State<Search> {
+  // Create a FocusNode to manage focus
+  late FocusNode _focusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize the focus node
+    _focusNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    // Clean up the focus node when the widget is disposed
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -26,17 +48,18 @@ class Search extends StatelessWidget {
       child: Row(
         children: [
           IconButton(
-            icon: icon,
-            onPressed: onPressed,
+            icon: widget.icon,
+            onPressed: widget.onPressed,
             color: AppTheme.textColor,
           ),
           Expanded(
             child: TextField(
               autofocus: false,
-              focusNode: FocusNode(),
-              controller: textController,
+              focusNode: _focusNode, // Use the properly managed focus node
+              controller: widget.textController,
+              keyboardType: TextInputType.text,
               decoration: InputDecoration(
-                hintText: hint,
+                hintText: widget.hint,
                 border: InputBorder.none,
                 hintStyle: const TextStyle(
                   color: AppTheme.defaultTextColor,

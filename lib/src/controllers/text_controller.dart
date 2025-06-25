@@ -3,4 +3,5 @@ import 'package:get/get.dart';
 
 class AddDeviceC extends GetxController {
   final namaSwitch = TextEditingController();
+  final ruanganC = TextEditingController();
 }

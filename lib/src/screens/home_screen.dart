@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sigma_home/src/providers/button_provider.dart';
+import 'package:sigma_home/src/routes/route_named.dart';
 import 'package:sigma_home/src/theme/theme.dart';
 import 'package:sigma_home/src/widgets/device.dart';
 import 'package:sigma_home/src/widgets/edit_profile.dart';
 import 'package:sigma_home/src/widgets/fill_button.dart';
 import 'package:sigma_home/src/widgets/filter_button.dart';
+import 'package:sigma_home/src/widgets/photo_profile.dart';
 import 'package:sigma_home/src/widgets/room.dart';
 import 'package:sigma_home/src/widgets/search.dart';
 import 'package:weather_icons/weather_icons.dart';
@@ -40,7 +42,7 @@ class HomeScreen extends StatelessWidget {
         scrolledUnderElevation: 0,
         title: const Text(
           'SigmaHome',
-          style: AppTheme.h1,
+          style: AppTheme.h3,
         ),
         actions: [
           Builder(
@@ -58,6 +60,7 @@ class HomeScreen extends StatelessWidget {
                   // clearAllData(context);
                 } else if (value == "logout") {
                   //masukkan di sini
+                  Get.offNamed(RouteNamed.signIn);
                 }
               },
 
@@ -132,17 +135,7 @@ class HomeScreen extends StatelessWidget {
                       )
                     ],
                   ),
-                  Container(
-                    width: 40,
-                    height: 40,
-                    clipBehavior: Clip.antiAlias,
-                    decoration: ShapeDecoration(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadiusGeometry.circular(16),
-                      ),
-                    ),
-                    child: Image.asset('assets/images/profile.jpg'),
-                  )
+                  PhotoProfile(),
                 ],
               ),
             ),
@@ -255,7 +248,9 @@ class HomeScreen extends StatelessWidget {
               child: FillButton(
                 content: "ADD NEW DEVICE",
                 color: Color(0xff2897FF),
-                onPressed: () {},
+                onPressed: () {
+                  Get.toNamed(RouteNamed.addDevice);
+                },
               ),
             )
           ],
