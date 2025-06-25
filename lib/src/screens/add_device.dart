@@ -6,6 +6,7 @@ import 'package:sigma_home/src/providers/add_device.dart';
 import 'package:sigma_home/src/theme/theme.dart';
 import 'package:sigma_home/src/widgets/device_type.dart';
 import 'package:sigma_home/src/widgets/generate_device_id.dart';
+import 'package:sigma_home/src/widgets/photo_profile.dart';
 import 'package:sigma_home/src/widgets/room_selection.dart';
 import 'package:sigma_home/src/widgets/text_field_support.dart';
 
@@ -23,15 +24,34 @@ class AddDevice extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final addDeviceC = Get.put(AddDeviceC());
-    final addDevice = Get.put(AddDeviceProvider());
+    final addDeviceC = Get.find<AddDeviceC>();
+    final addDevice = Get.find<AddDeviceProvider>();
 
     final mediaQueryWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text("Add New Switch"),
-        actions: [],
+        title: const Text(
+          "Add New Switch",
+          style: AppTheme.h3,
+        ),
+        centerTitle: true,
+        leading: IconButton(
+          onPressed: () {
+            Get.back();
+          },
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: AppTheme.primaryColor,
+          ),
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: PhotoProfile(),
+          ),
+        ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
