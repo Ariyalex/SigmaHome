@@ -25,16 +25,8 @@ class _MyTextFieldState extends State<MyTextField> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _textController = widget.controller;
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    _textController.dispose();
-    super.dispose();
   }
 
   void _togglePasswordVisibility() {

@@ -42,7 +42,7 @@ class HomeScreen extends StatelessWidget {
         scrolledUnderElevation: 0,
         title: const Text(
           'SigmaHome',
-          style: AppTheme.h1,
+          style: AppTheme.h3,
         ),
         actions: [
           Builder(
@@ -60,6 +60,7 @@ class HomeScreen extends StatelessWidget {
                   // clearAllData(context);
                 } else if (value == "logout") {
                   //masukkan di sini
+                  Get.offNamed(RouteNamed.signIn);
                 }
               },
 
