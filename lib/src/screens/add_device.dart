@@ -53,87 +53,91 @@ class AddDevice extends StatelessWidget {
           ),
         ],
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        spacing: 24,
-        children: [
-          Container(
-            width: mediaQueryWidth,
-            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 22),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text("Pilih Device Baru", style: AppTheme.h3),
-                const SizedBox(height: 12),
-                Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: AppTheme.accentColor),
-                  padding: EdgeInsets.symmetric(vertical: 12, horizontal: 18),
-                  height: 135,
-                  child: ListView.builder(
-                    itemCount: deviceTypes.length,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) {
-                      return Container(
-                        margin: EdgeInsets.only(right: 10),
-                        child: GestureDetector(
-                          onTap: () => addDevice.selected(index),
-                          child: Obx(() => DeviceType(
-                                icon: deviceTypes[index]['icon'],
-                                name: deviceTypes[index]['name'],
-                                isActive: index == addDevice.selected.value,
-                              )),
-                        ),
-                      );
-                    },
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          spacing: 24,
+          children: [
+            Container(
+              width: mediaQueryWidth,
+              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 22),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text("Pilih Device Baru", style: AppTheme.h3),
+                  const SizedBox(height: 12),
+                  Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: AppTheme.accentColor),
+                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 18),
+                    height: 135,
+                    child: ListView.builder(
+                      itemCount: deviceTypes.length,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          margin: EdgeInsets.only(right: 10),
+                          child: GestureDetector(
+                            onTap: () => addDevice.selected(index),
+                            child: Obx(() => DeviceType(
+                                  icon: deviceTypes[index]['icon'],
+                                  name: deviceTypes[index]['name'],
+                                  isActive: index == addDevice.selected.value,
+                                )),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 20),
+              padding: EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                border: BoxBorder.all(
+                  color: Color(0xffD4D6DD),
+                ),
+              ),
+              child: Column(
+                spacing: 20,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextFieldSupport(
+                    labelText: "Nama Device",
+                    hintText: "Ex: lampu fufufafa",
+                    suportText: "*Berikan device nama",
+                    keyboardType: TextInputType.text,
+                    controller: TextEditingController(),
+                  ),
+                  RoomSelection(),
+                ],
+              ),
+            ),
+            OutlinedButton(
+              style: ButtonStyle(
+                side: WidgetStateProperty.all(
+                  const BorderSide(
+                    color: AppTheme.primaryColor,
+                    width: 1.5,
                   ),
                 ),
-              ],
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 20),
-            padding: EdgeInsets.all(14),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              border: BoxBorder.all(
-                color: Color(0xffD4D6DD),
-              ),
-            ),
-            child: Column(
-              spacing: 20,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextFieldSupport(
-                  labelText: "Nama Device",
-                  hintText: "Ex: lampu fufufafa",
-                  suportText: "*Berikan device nama",
-                  controller: TextEditingController(),
-                ),
-                RoomSelection(),
-              ],
-            ),
-          ),
-          OutlinedButton(
-            style: ButtonStyle(
-              side: WidgetStateProperty.all(
-                const BorderSide(
-                  color: AppTheme.primaryColor,
-                  width: 1.5,
+                shape: WidgetStateProperty.all(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
               ),
-              shape: WidgetStateProperty.all(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
+              onPressed: () {},
+              child: Text("Generate Device ID"),
             ),
-            onPressed: () {},
-            child: Text("Generate Device ID"),
-          ),
-          GenerateDeviceId(),
-        ],
+            GenerateDeviceId(),
+          ],
+        ),
       ),
     );
   }

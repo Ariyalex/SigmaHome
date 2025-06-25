@@ -57,6 +57,7 @@ class _SearchState extends State<Search> {
               autofocus: false,
               focusNode: _focusNode, // Use the properly managed focus node
               controller: widget.textController,
+              keyboardType: TextInputType.text,
               decoration: InputDecoration(
                 hintText: widget.hint,
                 border: InputBorder.none,

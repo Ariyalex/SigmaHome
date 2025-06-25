@@ -66,6 +66,7 @@ class ForgotPass extends StatelessWidget {
                             controller: authC.email,
                             labelText: "Email",
                             hintText: "contoh@mail.com",
+                            keyboardType: TextInputType.emailAddress,
                           ),
                           const Expanded(
                             child: Text(
