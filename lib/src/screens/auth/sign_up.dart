@@ -75,23 +75,27 @@ class SignUp extends StatelessWidget {
                             controller: authC.email,
                             labelText: "Email",
                             hintText: "contoh@mail.com",
+                            keyboardType: TextInputType.emailAddress,
                           ),
                           MyTextField(
                             controller: authC.username,
                             labelText: "Username",
                             hintText: "new username",
+                            keyboardType: TextInputType.name,
                           ),
                           MyTextField(
                             controller: authC.password,
                             isPassword: true,
                             labelText: "Password",
                             hintText: "new password",
+                            keyboardType: TextInputType.visiblePassword,
                           ),
                           MyTextField(
                             controller: authC.confirmPass,
                             isPassword: true,
                             labelText: "Confirm password",
                             hintText: "confirm password",
+                            keyboardType: TextInputType.visiblePassword,
                           ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

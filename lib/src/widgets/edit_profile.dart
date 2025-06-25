@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:sigma_home/src/theme/theme.dart';
-import 'package:sigma_home/src/widgets/my_text_field.dart';
 import 'package:sigma_home/src/widgets/photo_profile.dart';
 import 'package:sigma_home/src/widgets/text_field_support.dart';
 
@@ -54,6 +53,7 @@ class _EditProfileState extends State<EditProfile> {
                   hintText: "new name",
                   suportText: "*Ganti nama menjadi nama yang baru",
                   controller: TextEditingController(),
+                  keyboardType: TextInputType.name,
                 ),
                 SizedBox(
                   height: 10,

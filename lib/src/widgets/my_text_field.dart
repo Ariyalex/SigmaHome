@@ -6,12 +6,14 @@ class MyTextField extends StatefulWidget {
   final String labelText;
   final String hintText;
   final bool isPassword;
+  final TextInputType? keyboardType;
 
   const MyTextField({
     super.key,
     required this.labelText,
     required this.hintText,
     required this.controller,
+    this.keyboardType,
     this.isPassword = false,
   });
 
@@ -49,6 +51,7 @@ class _MyTextFieldState extends State<MyTextField> {
             height: 8,
           ),
           TextField(
+            keyboardType: widget.keyboardType,
             controller: _textController,
             obscureText: widget.isPassword ? _obscureText : false,
             style: const TextStyle(

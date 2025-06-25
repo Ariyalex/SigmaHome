@@ -68,12 +68,14 @@ class SignIn extends StatelessWidget {
                             controller: authC.email,
                             labelText: "Email",
                             hintText: "contoh@mail.com",
+                            keyboardType: TextInputType.emailAddress,
                           ),
                           MyTextField(
                             controller: authC.password,
                             isPassword: true,
                             labelText: "Password",
                             hintText: "ex: user123",
+                            keyboardType: TextInputType.visiblePassword,
                           ),
                           Column(
                             children: [

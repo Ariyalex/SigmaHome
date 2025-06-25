@@ -7,6 +7,7 @@ class TextFieldSupport extends StatelessWidget {
   final String hintText;
   final String suportText;
   final TextEditingController controller;
+  final TextInputType? keyboardType;
 
   const TextFieldSupport({
     super.key,
@@ -14,6 +15,7 @@ class TextFieldSupport extends StatelessWidget {
     required this.hintText,
     required this.suportText,
     required this.controller,
+    this.keyboardType,
   });
 
   @override
@@ -24,7 +26,11 @@ class TextFieldSupport extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         MyTextField(
-            labelText: labelText, hintText: hintText, controller: controller),
+          labelText: labelText,
+          hintText: hintText,
+          controller: controller,
+          keyboardType: keyboardType,
+        ),
         Text(
           suportText,
           style: AppTheme.actionS,
