@@ -7,6 +7,7 @@ import 'package:sigma_home/src/widgets/device.dart';
 import 'package:sigma_home/src/widgets/edit_profile.dart';
 import 'package:sigma_home/src/widgets/fill_button.dart';
 import 'package:sigma_home/src/widgets/filter_button.dart';
+import 'package:sigma_home/src/widgets/log_out_button.dart';
 import 'package:sigma_home/src/widgets/photo_profile.dart';
 import 'package:sigma_home/src/widgets/room.dart';
 import 'package:sigma_home/src/widgets/search.dart';
@@ -52,6 +53,7 @@ class HomeScreen extends StatelessWidget {
                 color: AppTheme.iconColor,
               ), // Burger Icon
               onSelected: (value) {
+                Navigator.pop(context);
                 if (value == "device") {
                   // Get.toNamed(RouteNamed.guideGeneral);
                 } else if (value == "profile") {
@@ -60,6 +62,7 @@ class HomeScreen extends StatelessWidget {
                   // clearAllData(context);
                 } else if (value == "logout") {
                   //masukkan di sini
+
                   Get.offNamed(RouteNamed.signIn);
                 }
               },
@@ -92,16 +95,7 @@ class HomeScreen extends StatelessWidget {
                 ),
                 const PopupMenuItem<String>(
                   value: "logout",
-                  child: ListTile(
-                    leading: Icon(
-                      Icons.logout,
-                      color: AppTheme.errorColor,
-                    ),
-                    title: Text(
-                      "Log out",
-                      style: TextStyle(color: AppTheme.errorColor),
-                    ),
-                  ),
+                  child: LogOutButton(),
                 ),
               ],
             ),

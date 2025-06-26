@@ -24,6 +24,52 @@ class SignUp extends StatelessWidget {
       color: AppTheme.textColor,
     );
 
+    Future<String?> signUpUser() async {
+      authC.isLoading.value = true;
+
+      debugPrint(
+          "email: ${authC.email.text}, password: ${authC.password.text}, confirm: ${authC.confirmPass.text}");
+
+      try {
+        if (authC.email.text.trim().isEmpty ||
+            authC.password.text.trim().isEmpty) {
+          throw "Email dan Password tidak boleh kosong";
+        } else if (authC.confirmPass.text.trim() !=
+            authC.password.text.trim()) {
+          throw "Confirm password tidak sama dengan new password";
+        } else if (authC.confirmPass.text.trim().isEmpty) {
+          throw "Confirm password tidak boleh kosong";
+        } else if (authC.confirmPass.text.trim().length < 6) {
+          throw ("password harus lebih dari 6 karakter");
+        }
+
+        if (authC.terms.value == true) {
+          await Get.find<AuthController>().signUp(authC.email.text.trim(),
+              authC.confirmPass.text.trim(), authC.username.text);
+
+          Get.toNamed(RouteNamed.signIn);
+          Get.snackbar(
+            "Success!",
+            "Sign up berhasil!",
+            backgroundColor: AppTheme.sucessColor,
+            colorText: AppTheme.surfaceColor,
+          );
+        } else {
+          throw "setujui syarat dan ketentuan terlebihdulu";
+        }
+      } catch (error) {
+        Get.snackbar(
+          "Error!",
+          error.toString(),
+          backgroundColor: AppTheme.errorColor,
+          colorText: AppTheme.surfaceColor,
+        );
+      } finally {
+        authC.isLoading.value = false;
+      }
+      return null;
+    }
+
     return Scaffold(
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -140,11 +186,12 @@ class SignUp extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                              FillButton(
-                                content: "Sign Up",
-                                onPressed: () {},
-                                buttonType: ButtonType.filled,
-                              ),
+                              Obx(() => FillButton(
+                                    content: "Sign Up",
+                                    onPressed: () => signUpUser(),
+                                    buttonType: ButtonType.filled,
+                                    isLoading: authC.isLoading.value,
+                                  )),
                             ],
                           )
                         ],
@@ -162,7 +209,7 @@ class SignUp extends StatelessWidget {
                             baseline: TextBaseline.alphabetic,
                             child: TextButton(
                               onPressed: () {
-                                Get.toNamed(RouteNamed.signIn);
+                                Get.offNamed(RouteNamed.signIn);
                               },
                               child: const Text(
                                 "Sign In",

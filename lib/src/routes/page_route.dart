@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import 'package:sigma_home/src/bindings/add_device_binding.dart';
-import 'package:sigma_home/src/bindings/auth_binding.dart';
 import 'package:sigma_home/src/routes/route_named.dart';
 import 'package:sigma_home/src/screens/add_device.dart';
 import 'package:sigma_home/src/screens/auth/forgot_pass.dart';
@@ -22,7 +21,6 @@ class AppPage {
     GetPage(
       name: RouteNamed.signIn,
       page: () => SignIn(),
-      binding: Authbinding(),
     ),
     GetPage(
       name: RouteNamed.signUp,

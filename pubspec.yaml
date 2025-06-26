@@ -10,15 +10,19 @@ environment:
   sdk: ^3.5.3
 
 dependencies:
+  cloud_firestore: ^5.6.9
   dropdown_search: ^6.0.2
+  firebase_auth: ^5.6.0
   firebase_core: ^3.13.0
   firebase_database: ^11.3.5
   flutter:
     sdk: flutter
   font_awesome_flutter: ^10.8.0
   get: ^4.7.2
+  google_sign_in: ^6.2.2
   lucide_icons_flutter: ^3.0.5
   modal_bottom_sheet: ^3.0.0
+  shared_preferences: ^2.5.3
   textfield_search: ^0.11.1
   weather_icons: ^3.0.0
 

@@ -9,9 +9,10 @@ enum ButtonType {
 
 class FillButton extends StatelessWidget {
   final String content;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final ButtonType buttonType;
   final Color color;
+  final bool isLoading;
 
   const FillButton({
     super.key,
@@ -19,6 +20,7 @@ class FillButton extends StatelessWidget {
     required this.onPressed,
     this.color = AppTheme.primaryColor,
     this.buttonType = ButtonType.filled,
+    this.isLoading = false,
   });
 
   @override
@@ -36,21 +38,47 @@ class FillButton extends StatelessWidget {
     switch (buttonType) {
       case ButtonType.filled:
         return FilledButton(
-          onPressed: onPressed,
+          onPressed: isLoading ? null : onPressed,
           style: commonStyle.copyWith(
-            backgroundColor: WidgetStateProperty.all(color),
+            backgroundColor: WidgetStateProperty.all(
+              isLoading ? color.withValues(alpha: 0.6) : color,
+            ),
           ),
-          child: Text(content),
+          child: isLoading
+              ? const SizedBox(
+                  height: 20,
+                  width: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  ),
+                )
+              : Text(
+                  content,
+                  style: TextStyle(color: Colors.white),
+                ),
         );
       case ButtonType.text:
         return TextButton(
-          onPressed: onPressed,
+          onPressed: isLoading ? null : onPressed,
           style: commonStyle,
-          child: Text(content),
+          child: isLoading
+              ? SizedBox(
+                  height: 20,
+                  width: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(color),
+                  ),
+                )
+              : Text(
+                  content,
+                  style: TextStyle(color: AppTheme.primaryColor),
+                ),
         );
       case ButtonType.outlined:
         return OutlinedButton(
-          onPressed: onPressed,
+          onPressed: isLoading ? null : onPressed,
           style: commonStyle.copyWith(
             shape: WidgetStateProperty.all(
               RoundedRectangleBorder(
@@ -58,13 +86,27 @@ class FillButton extends StatelessWidget {
               ),
             ),
             side: WidgetStateProperty.all(
-              const BorderSide(
-                color: AppTheme.primaryColor,
+              BorderSide(
+                color: isLoading
+                    ? AppTheme.primaryColor.withValues(alpha: 0.6)
+                    : AppTheme.primaryColor,
                 width: 1.5,
               ),
             ),
           ),
-          child: Text(content),
+          child: isLoading
+              ? SizedBox(
+                  height: 20,
+                  width: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(color),
+                  ),
+                )
+              : Text(
+                  content,
+                  style: TextStyle(color: AppTheme.primaryColor),
+                ),
         );
     }
   }

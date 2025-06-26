@@ -14,8 +14,39 @@ class SignIn extends StatelessWidget {
   Widget build(BuildContext context) {
     final authC = Get.find<AuthController>();
 
-    final mediaQueryWidth = MediaQuery.of(context).size.width;
-    final mediaQueryHeight = MediaQuery.of(context).size.height;
+    final mediaQueryWidth = Get.width;
+    final mediaQueryHeight = Get.height;
+
+    Future<String?> authUser() async {
+      authC.isLoading.value = true;
+
+      debugPrint('Name: ${authC.email.text}, Password: ${authC.password.text}');
+
+      try {
+        //cek email or password kosong
+        if (authC.email.text.trim().isEmpty ||
+            authC.password.text.trim().isEmpty) {
+          throw "Email dan Password tidak boleh kosong";
+        }
+
+        await authC.signIn(
+          authC.email.text.trim(),
+          authC.password.text.trim(),
+        );
+
+        Get.offAllNamed(RouteNamed.homeScreen);
+      } catch (error) {
+        Get.snackbar(
+          "Error!",
+          error.toString(),
+          backgroundColor: AppTheme.errorColor,
+          colorText: AppTheme.surfaceColor,
+        );
+      } finally {
+        authC.isLoading.value = false;
+      }
+      return null;
+    }
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -45,8 +76,8 @@ class SignIn extends StatelessWidget {
                   children: [
                     //container untuk form
                     Container(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 24, horizontal: 28),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 24, horizontal: 28),
                       decoration: ShapeDecoration(
                           color: AppTheme.accentColor,
                           shape: RoundedRectangleBorder(
@@ -79,13 +110,14 @@ class SignIn extends StatelessWidget {
                           ),
                           Column(
                             children: [
-                              FillButton(
-                                content: "Sign In",
-                                onPressed: () {
-                                  Get.offNamed(RouteNamed.homeScreen);
-                                },
-                                buttonType: ButtonType.filled,
-                              ),
+                              Obx(() => FillButton(
+                                    content: "Sign In",
+                                    onPressed: () {
+                                      authUser();
+                                    },
+                                    buttonType: ButtonType.filled,
+                                    isLoading: authC.isLoading.value,
+                                  )),
                               FillButton(
                                 content: "Forgot Password?",
                                 onPressed: () {
@@ -162,7 +194,7 @@ class SignIn extends StatelessWidget {
                                 baseline: TextBaseline.alphabetic,
                                 child: TextButton(
                                   onPressed: () {
-                                    Get.toNamed(RouteNamed.signUp);
+                                    Get.offNamed(RouteNamed.signUp);
                                   },
                                   child: const Text(
                                     "Sign up",
