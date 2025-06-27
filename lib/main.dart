@@ -21,6 +21,9 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  Get.put(AuthController(), permanent: true);
+  final authC = Get.put(AuthController(), permanent: true);
+
+  await authC.initializedAuth();
+
   runApp(MyApp());
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sigma_home/src/controllers/auth_controller.dart';
 import 'package:sigma_home/src/providers/button_provider.dart';
 import 'package:sigma_home/src/routes/route_named.dart';
 import 'package:sigma_home/src/theme/theme.dart';
@@ -31,6 +32,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final buttonStatus = Get.put(ButtonProvider());
+    final authC = Get.find<AuthController>();
 
     final searchC = TextEditingController();
 
@@ -53,17 +55,12 @@ class HomeScreen extends StatelessWidget {
                 color: AppTheme.iconColor,
               ), // Burger Icon
               onSelected: (value) {
-                Navigator.pop(context);
                 if (value == "device") {
                   // Get.toNamed(RouteNamed.guideGeneral);
                 } else if (value == "profile") {
                   // _logout(context);
                 } else if (value == "about") {
                   // clearAllData(context);
-                } else if (value == "logout") {
-                  //masukkan di sini
-
-                  Get.offNamed(RouteNamed.signIn);
                 }
               },
 
@@ -114,12 +111,12 @@ class HomeScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  const Column(
+                  Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Hello Zeta',
+                        'Hello ${authC.userData.value?.username ?? 'default'}',
                         style: AppTheme.h1,
                       ),
                       Text(

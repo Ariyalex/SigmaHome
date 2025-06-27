@@ -48,6 +48,24 @@ class SignIn extends StatelessWidget {
       return null;
     }
 
+    Future<void> authWithGoogle() async {
+      try {
+        await authC.signInWithGoogle();
+
+        Get.offAllNamed(RouteNamed.homeScreen);
+      } catch (error) {
+        print(error);
+        Get.snackbar(
+          "Error!",
+          error.toString(),
+          backgroundColor: AppTheme.errorColor,
+          colorText: AppTheme.surfaceColor,
+        );
+      } finally {
+        authC.isLoadingGoogle.value = false;
+      }
+    }
+
     return Scaffold(
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -100,6 +118,7 @@ class SignIn extends StatelessWidget {
                             labelText: "Email",
                             hintText: "contoh@mail.com",
                             keyboardType: TextInputType.emailAddress,
+                            textInputAction: TextInputAction.next,
                           ),
                           MyTextField(
                             controller: authC.password,
@@ -141,45 +160,25 @@ class SignIn extends StatelessWidget {
                         InkWell(
                           borderRadius: BorderRadius.circular(10),
                           splashColor: AppTheme.accentColor,
-                          onTap: () async {
-                            // try {
-                            //   setState(() {
-                            //     _isLoadingGoogle = true;
-                            //   });
-
-                            //   await authController.signInWithGoogle();
-
-                            //   if (!mounted) return;
-
-                            //   Get.offNamed(RouteNamed.homePage);
-                            // } catch (error) {
-                            //   Get.snackbar(
-                            //     "Error!",
-                            //     error.toString(),
-                            //     backgroundColor: color.colorScheme.error,
-                            //     colorText: color.colorScheme.onError,
-                            //   );
-                            // } finally {
-                            //   if (mounted) {
-                            //     setState(() {
-                            //       _isLoadingGoogle = false;
-                            //     });
-                            //   }
-                            // }
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: AppTheme.primaryColor,
-                                ),
-                                borderRadius: BorderRadius.circular(10)),
-                            child: const Icon(
-                              FontAwesomeIcons.google,
-                              color: AppTheme.primaryColor,
-                              size: 30,
-                            ),
-                          ),
+                          onTap: authWithGoogle,
+                          child: Obx(() => Container(
+                                padding: const EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: AppTheme.primaryColor,
+                                    ),
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: authC.isLoadingGoogle.value
+                                    ? const CircularProgressIndicator(
+                                        strokeWidth: 4,
+                                        color: AppTheme.iconColor,
+                                      )
+                                    : const Icon(
+                                        FontAwesomeIcons.google,
+                                        color: AppTheme.primaryColor,
+                                        size: 30,
+                                      ),
+                              )),
                         ),
                         //navigasi sign up
                         RichText(

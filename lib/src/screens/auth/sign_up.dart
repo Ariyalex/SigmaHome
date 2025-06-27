@@ -47,7 +47,7 @@ class SignUp extends StatelessWidget {
           await Get.find<AuthController>().signUp(authC.email.text.trim(),
               authC.confirmPass.text.trim(), authC.username.text);
 
-          Get.toNamed(RouteNamed.signIn);
+          Get.offAllNamed(RouteNamed.homeScreen);
           Get.snackbar(
             "Success!",
             "Sign up berhasil!",
