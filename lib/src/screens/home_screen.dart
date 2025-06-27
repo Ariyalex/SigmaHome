@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sigma_home/src/controllers/auth_controller.dart';
 import 'package:sigma_home/src/providers/button_provider.dart';
 import 'package:sigma_home/src/routes/route_named.dart';
 import 'package:sigma_home/src/theme/theme.dart';
@@ -7,6 +8,7 @@ import 'package:sigma_home/src/widgets/device.dart';
 import 'package:sigma_home/src/widgets/edit_profile.dart';
 import 'package:sigma_home/src/widgets/fill_button.dart';
 import 'package:sigma_home/src/widgets/filter_button.dart';
+import 'package:sigma_home/src/widgets/log_out_button.dart';
 import 'package:sigma_home/src/widgets/photo_profile.dart';
 import 'package:sigma_home/src/widgets/room.dart';
 import 'package:sigma_home/src/widgets/search.dart';
@@ -30,6 +32,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final buttonStatus = Get.put(ButtonProvider());
+    final authC = Get.find<AuthController>();
 
     final searchC = TextEditingController();
 
@@ -58,9 +61,6 @@ class HomeScreen extends StatelessWidget {
                   // _logout(context);
                 } else if (value == "about") {
                   // clearAllData(context);
-                } else if (value == "logout") {
-                  //masukkan di sini
-                  Get.offNamed(RouteNamed.signIn);
                 }
               },
 
@@ -92,16 +92,7 @@ class HomeScreen extends StatelessWidget {
                 ),
                 const PopupMenuItem<String>(
                   value: "logout",
-                  child: ListTile(
-                    leading: Icon(
-                      Icons.logout,
-                      color: AppTheme.errorColor,
-                    ),
-                    title: Text(
-                      "Log out",
-                      style: TextStyle(color: AppTheme.errorColor),
-                    ),
-                  ),
+                  child: LogOutButton(),
                 ),
               ],
             ),
@@ -120,12 +111,12 @@ class HomeScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  const Column(
+                  Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Hello Zeta',
+                        'Hello ${authC.userData.value?.username ?? 'default'}',
                         style: AppTheme.h1,
                       ),
                       Text(

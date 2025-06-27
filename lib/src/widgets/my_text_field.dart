@@ -7,6 +7,7 @@ class MyTextField extends StatefulWidget {
   final String hintText;
   final bool isPassword;
   final TextInputType? keyboardType;
+  final TextInputAction? textInputAction;
 
   const MyTextField({
     super.key,
@@ -15,6 +16,7 @@ class MyTextField extends StatefulWidget {
     required this.controller,
     this.keyboardType,
     this.isPassword = false,
+    this.textInputAction,
   });
 
   @override
@@ -53,6 +55,7 @@ class _MyTextFieldState extends State<MyTextField> {
           TextField(
             keyboardType: widget.keyboardType,
             controller: _textController,
+            textInputAction: widget.textInputAction,
             obscureText: widget.isPassword ? _obscureText : false,
             style: const TextStyle(
               fontSize: 14,

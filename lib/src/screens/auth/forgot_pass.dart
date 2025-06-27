@@ -6,12 +6,40 @@ import 'package:sigma_home/src/widgets/fill_button.dart';
 import 'package:sigma_home/src/widgets/my_text_field.dart';
 
 class ForgotPass extends StatelessWidget {
-  const ForgotPass({super.key});
+  ForgotPass({super.key});
+
+  final authC = Get.find<AuthController>();
+
+  Future<String?> _recoverPassword(String email) async {
+    authC.isLoading.value = true;
+
+    debugPrint('Name: $email');
+    try {
+      if (authC.email.text.isEmpty) {
+        throw "Email recovery harus diisi!";
+      }
+
+      await authC.resetPassword(email);
+
+      Get.back();
+      Get.snackbar("Success", "Mail telah dikirm ke email!",
+          backgroundColor: AppTheme.sucessColor,
+          colorText: AppTheme.surfaceColor);
+    } catch (error) {
+      Get.snackbar(
+        "Error!",
+        error.toString(),
+        backgroundColor: AppTheme.errorColor,
+        colorText: AppTheme.surfaceColor,
+      );
+    } finally {
+      authC.isLoading.value = false;
+    }
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
-    final authC = Get.find<AuthController>();
-
     final mediaQueryWidth = MediaQuery.of(context).size.width;
     final mediaQueryHeight = MediaQuery.of(context).size.height;
 
@@ -79,7 +107,9 @@ class ForgotPass extends StatelessWidget {
                             children: [
                               FillButton(
                                 content: "Recover",
-                                onPressed: () {},
+                                onPressed: () async {
+                                  _recoverPassword(authC.email.text);
+                                },
                                 buttonType: ButtonType.filled,
                               ),
                               FillButton(

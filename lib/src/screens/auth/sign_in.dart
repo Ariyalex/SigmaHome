@@ -14,8 +14,57 @@ class SignIn extends StatelessWidget {
   Widget build(BuildContext context) {
     final authC = Get.find<AuthController>();
 
-    final mediaQueryWidth = MediaQuery.of(context).size.width;
-    final mediaQueryHeight = MediaQuery.of(context).size.height;
+    final mediaQueryWidth = Get.width;
+    final mediaQueryHeight = Get.height;
+
+    Future<String?> authUser() async {
+      authC.isLoading.value = true;
+
+      debugPrint('Name: ${authC.email.text}, Password: ${authC.password.text}');
+
+      try {
+        //cek email or password kosong
+        if (authC.email.text.trim().isEmpty ||
+            authC.password.text.trim().isEmpty) {
+          throw "Email dan Password tidak boleh kosong";
+        }
+
+        await authC.signIn(
+          authC.email.text.trim(),
+          authC.password.text.trim(),
+        );
+
+        Get.offAllNamed(RouteNamed.homeScreen);
+      } catch (error) {
+        Get.snackbar(
+          "Error!",
+          error.toString(),
+          backgroundColor: AppTheme.errorColor,
+          colorText: AppTheme.surfaceColor,
+        );
+      } finally {
+        authC.isLoading.value = false;
+      }
+      return null;
+    }
+
+    Future<void> authWithGoogle() async {
+      try {
+        await authC.signInWithGoogle();
+
+        Get.offAllNamed(RouteNamed.homeScreen);
+      } catch (error) {
+        print(error);
+        Get.snackbar(
+          "Error!",
+          error.toString(),
+          backgroundColor: AppTheme.errorColor,
+          colorText: AppTheme.surfaceColor,
+        );
+      } finally {
+        authC.isLoadingGoogle.value = false;
+      }
+    }
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -45,8 +94,8 @@ class SignIn extends StatelessWidget {
                   children: [
                     //container untuk form
                     Container(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 24, horizontal: 28),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 24, horizontal: 28),
                       decoration: ShapeDecoration(
                           color: AppTheme.accentColor,
                           shape: RoundedRectangleBorder(
@@ -69,6 +118,7 @@ class SignIn extends StatelessWidget {
                             labelText: "Email",
                             hintText: "contoh@mail.com",
                             keyboardType: TextInputType.emailAddress,
+                            textInputAction: TextInputAction.next,
                           ),
                           MyTextField(
                             controller: authC.password,
@@ -79,13 +129,14 @@ class SignIn extends StatelessWidget {
                           ),
                           Column(
                             children: [
-                              FillButton(
-                                content: "Sign In",
-                                onPressed: () {
-                                  Get.offNamed(RouteNamed.homeScreen);
-                                },
-                                buttonType: ButtonType.filled,
-                              ),
+                              Obx(() => FillButton(
+                                    content: "Sign In",
+                                    onPressed: () {
+                                      authUser();
+                                    },
+                                    buttonType: ButtonType.filled,
+                                    isLoading: authC.isLoading.value,
+                                  )),
                               FillButton(
                                 content: "Forgot Password?",
                                 onPressed: () {
@@ -109,45 +160,25 @@ class SignIn extends StatelessWidget {
                         InkWell(
                           borderRadius: BorderRadius.circular(10),
                           splashColor: AppTheme.accentColor,
-                          onTap: () async {
-                            // try {
-                            //   setState(() {
-                            //     _isLoadingGoogle = true;
-                            //   });
-
-                            //   await authController.signInWithGoogle();
-
-                            //   if (!mounted) return;
-
-                            //   Get.offNamed(RouteNamed.homePage);
-                            // } catch (error) {
-                            //   Get.snackbar(
-                            //     "Error!",
-                            //     error.toString(),
-                            //     backgroundColor: color.colorScheme.error,
-                            //     colorText: color.colorScheme.onError,
-                            //   );
-                            // } finally {
-                            //   if (mounted) {
-                            //     setState(() {
-                            //       _isLoadingGoogle = false;
-                            //     });
-                            //   }
-                            // }
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: AppTheme.primaryColor,
-                                ),
-                                borderRadius: BorderRadius.circular(10)),
-                            child: const Icon(
-                              FontAwesomeIcons.google,
-                              color: AppTheme.primaryColor,
-                              size: 30,
-                            ),
-                          ),
+                          onTap: authWithGoogle,
+                          child: Obx(() => Container(
+                                padding: const EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: AppTheme.primaryColor,
+                                    ),
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: authC.isLoadingGoogle.value
+                                    ? const CircularProgressIndicator(
+                                        strokeWidth: 4,
+                                        color: AppTheme.iconColor,
+                                      )
+                                    : const Icon(
+                                        FontAwesomeIcons.google,
+                                        color: AppTheme.primaryColor,
+                                        size: 30,
+                                      ),
+                              )),
                         ),
                         //navigasi sign up
                         RichText(
@@ -162,7 +193,7 @@ class SignIn extends StatelessWidget {
                                 baseline: TextBaseline.alphabetic,
                                 child: TextButton(
                                   onPressed: () {
-                                    Get.toNamed(RouteNamed.signUp);
+                                    Get.offNamed(RouteNamed.signUp);
                                   },
                                   child: const Text(
                                     "Sign up",
