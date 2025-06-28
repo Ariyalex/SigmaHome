@@ -28,7 +28,8 @@ class SignUp extends StatelessWidget {
       authC.isLoading.value = true;
 
       debugPrint(
-          "email: ${authC.email.text}, password: ${authC.password.text}, confirm: ${authC.confirmPass.text}");
+        "email: ${authC.email.text}, password: ${authC.password.text}, confirm: ${authC.confirmPass.text}",
+      );
 
       try {
         if (authC.email.text.trim().isEmpty ||
@@ -44,8 +45,11 @@ class SignUp extends StatelessWidget {
         }
 
         if (authC.terms.value == true) {
-          await Get.find<AuthController>().signUp(authC.email.text.trim(),
-              authC.confirmPass.text.trim(), authC.username.text);
+          await authC.signUp(
+            authC.email.text.trim(),
+            authC.confirmPass.text.trim(),
+            authC.username.text,
+          );
 
           Get.offAllNamed(RouteNamed.homeScreen);
           Get.snackbar(
@@ -88,9 +92,10 @@ class SignUp extends StatelessWidget {
                 const Text(
                   "SigmaHome",
                   style: TextStyle(
-                      fontSize: 44,
-                      fontWeight: FontWeight.bold,
-                      color: AppTheme.textColor),
+                    fontSize: 44,
+                    fontWeight: FontWeight.bold,
+                    color: AppTheme.textColor,
+                  ),
                 ),
                 Column(
                   mainAxisSize: MainAxisSize.min,
@@ -99,12 +104,15 @@ class SignUp extends StatelessWidget {
                     //container untuk form
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          vertical: 24, horizontal: 28),
+                        vertical: 24,
+                        horizontal: 28,
+                      ),
                       decoration: ShapeDecoration(
-                          color: AppTheme.accentColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadiusGeometry.circular(18),
-                          )),
+                        color: AppTheme.accentColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadiusGeometry.circular(18),
+                        ),
+                      ),
                       width: double.infinity,
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
@@ -149,12 +157,14 @@ class SignUp extends StatelessWidget {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  Obx(() => MyCheckBox(
-                                        value: authC.terms.value ?? false,
-                                        onChanged: (value) {
-                                          authC.terms.value = value;
-                                        },
-                                      )),
+                                  Obx(
+                                    () => MyCheckBox(
+                                      value: authC.terms.value ?? false,
+                                      onChanged: (value) {
+                                        authC.terms.value = value;
+                                      },
+                                    ),
+                                  ),
                                   Expanded(
                                     child: RichText(
                                       text: TextSpan(
@@ -186,14 +196,16 @@ class SignUp extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                              Obx(() => FillButton(
-                                    content: "Sign Up",
-                                    onPressed: () => signUpUser(),
-                                    buttonType: ButtonType.filled,
-                                    isLoading: authC.isLoading.value,
-                                  )),
+                              Obx(
+                                () => FillButton(
+                                  content: "Sign Up",
+                                  onPressed: () => signUpUser(),
+                                  buttonType: ButtonType.filled,
+                                  isLoading: authC.isLoading.value,
+                                ),
+                              ),
                             ],
-                          )
+                          ),
                         ],
                       ),
                     ),
@@ -202,8 +214,9 @@ class SignUp extends StatelessWidget {
                       text: TextSpan(
                         children: [
                           const TextSpan(
-                              text: "Already have an account? ",
-                              style: TextStyle(color: AppTheme.textColor)),
+                            text: "Already have an account? ",
+                            style: TextStyle(color: AppTheme.textColor),
+                          ),
                           WidgetSpan(
                             alignment: PlaceholderAlignment.baseline,
                             baseline: TextBaseline.alphabetic,

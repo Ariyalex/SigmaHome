@@ -5,8 +5,9 @@ class ButtonProvider extends GetxController {
   var status = true.obs;
   var activeRoomIndex = 0.obs;
 
-  final DatabaseReference _relayRef =
-      FirebaseDatabase.instance.ref("kontrol/relay");
+  final DatabaseReference _relayRef = FirebaseDatabase.instance.ref(
+    "kontrol/relay",
+  );
 
   @override
   void onInit() {
@@ -23,9 +24,7 @@ class ButtonProvider extends GetxController {
     try {
       status.value = !status.value;
 
-      await _relayRef.update({
-        "status": status.value,
-      });
+      await _relayRef.update({"status": status.value});
       print("status $status");
     } catch (e) {
       print("firebase update error: $e");

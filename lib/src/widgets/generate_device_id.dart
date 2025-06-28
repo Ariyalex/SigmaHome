@@ -1,9 +1,14 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:sigma_home/src/providers/add_device.dart';
 import 'package:sigma_home/src/theme/theme.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class GenerateDeviceId extends StatelessWidget {
-  const GenerateDeviceId({super.key});
+  GenerateDeviceId({super.key});
+  final addDevice = Get.find<AddDeviceProvider>();
 
   @override
   Widget build(BuildContext context) {
@@ -21,19 +26,20 @@ class GenerateDeviceId extends StatelessWidget {
           RichText(
             text: TextSpan(
               children: [
-                const TextSpan(
-                  text: "Device ID: ",
-                  style: AppTheme.bodyL,
-                ),
+                const TextSpan(text: "Device ID: ", style: AppTheme.bodyL),
                 TextSpan(
-                  text: "ZETA-DVC01",
-                  style: AppTheme.bodyL.copyWith(
-                    color: AppTheme.primaryColor,
-                  ),
+                  text: addDevice.generatedId.value,
+                  style: AppTheme.bodyL.copyWith(color: AppTheme.primaryColor),
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
-                      print(
-                        "ZETA-DVC01",
+                      Clipboard.setData(
+                        ClipboardData(text: addDevice.generatedId.value),
+                      );
+                      Get.snackbar(
+                        'Berhasil disalin',
+                        'Id: ${addDevice.generatedId.value}',
+                        backgroundColor: AppTheme.sucessColor,
+                        colorText: Colors.white,
                       );
                     },
                 ),
@@ -58,8 +64,8 @@ class GenerateDeviceId extends StatelessWidget {
                   ),
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
-                      print(
-                        "ZETA-DVC01",
+                      launchUrl(
+                        Uri.parse('https://github.com/Ariyalex/SigmaHome'),
                       );
                     },
                 ),
@@ -67,13 +73,17 @@ class GenerateDeviceId extends StatelessWidget {
             ),
           ),
           FilledButton(
-            onPressed: () {},
+            onPressed: () async {
+              try {
+                await addDevice.addDevice();
+              } catch (error) {
+                Get.snackbar('Error', error.toString());
+              }
+            },
             child: Text("Create Device"),
             style: ButtonStyle(
               shape: WidgetStateProperty.all(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
             ),
           ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sigma_home/src/controllers/text_controller.dart';
+import 'package:sigma_home/src/providers/add_device.dart';
 import 'package:sigma_home/src/theme/theme.dart';
 import 'package:textfield_search/textfield_search.dart';
 
@@ -18,6 +19,7 @@ class RoomSelection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final addDeviceC = Get.find<AddDeviceC>();
+    final addDevice = Get.find<AddDeviceProvider>();
 
     return Flexible(
       child: Column(
@@ -29,7 +31,7 @@ class RoomSelection extends StatelessWidget {
           TextFieldSearch(
             initialList: roomName,
             label: "Kamar",
-            controller: addDeviceC.ruanganC,
+            controller: addDevice.roomNameController,
             textStyle: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.normal,

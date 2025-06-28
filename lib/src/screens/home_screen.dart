@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sigma_home/src/controllers/auth_controller.dart';
+import 'package:sigma_home/src/controllers/device_controller.dart';
 import 'package:sigma_home/src/providers/button_provider.dart';
 import 'package:sigma_home/src/routes/route_named.dart';
 import 'package:sigma_home/src/theme/theme.dart';
@@ -9,7 +10,6 @@ import 'package:sigma_home/src/widgets/edit_profile.dart';
 import 'package:sigma_home/src/widgets/fill_button.dart';
 import 'package:sigma_home/src/widgets/filter_button.dart';
 import 'package:sigma_home/src/widgets/log_out_button.dart';
-import 'package:sigma_home/src/widgets/photo_profile.dart';
 import 'package:sigma_home/src/widgets/room.dart';
 import 'package:sigma_home/src/widgets/search.dart';
 import 'package:weather_icons/weather_icons.dart';
@@ -25,14 +25,13 @@ List<String> roomName = [
 ];
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({
-    super.key,
-  });
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     final buttonStatus = Get.put(ButtonProvider());
     final authC = Get.find<AuthController>();
+    final deviceC = Get.find<DeviceController>();
 
     final searchC = TextEditingController();
 
@@ -43,10 +42,7 @@ class HomeScreen extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         scrolledUnderElevation: 0,
-        title: const Text(
-          'SigmaHome',
-          style: AppTheme.h3,
-        ),
+        title: const Text('SigmaHome', style: AppTheme.h3),
         actions: [
           Builder(
             builder: (context) => PopupMenuButton<String>(
@@ -56,7 +52,7 @@ class HomeScreen extends StatelessWidget {
               ), // Burger Icon
               onSelected: (value) {
                 if (value == "device") {
-                  // Get.toNamed(RouteNamed.guideGeneral);
+                  Get.toNamed(RouteNamed.addDevice);
                 } else if (value == "profile") {
                   // _logout(context);
                 } else if (value == "about") {
@@ -69,10 +65,7 @@ class HomeScreen extends StatelessWidget {
                 const PopupMenuItem<String>(
                   value: "device",
                   child: ListTile(
-                    leading: Icon(
-                      Icons.add,
-                      color: AppTheme.iconColor,
-                    ),
+                    leading: Icon(Icons.add, color: AppTheme.iconColor),
                     title: Text("Add Device"),
                   ),
                 ),
@@ -122,11 +115,12 @@ class HomeScreen extends StatelessWidget {
                       Text(
                         "Welcome to SigmaHome",
                         style: TextStyle(
-                            color: AppTheme.onDefaultColor, fontSize: 12),
-                      )
+                          color: AppTheme.onDefaultColor,
+                          fontSize: 12,
+                        ),
+                      ),
                     ],
                   ),
-                  PhotoProfile(),
                 ],
               ),
             ),
@@ -153,20 +147,14 @@ class HomeScreen extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        "Cerah Berawan",
-                        style: AppTheme.h1,
-                      ),
-                      Text(
-                        "24°C",
-                        style: AppTheme.h2,
-                      ),
+                      Text("Cerah Berawan", style: AppTheme.h1),
+                      Text("24°C", style: AppTheme.h2),
                       Text(
                         "Ngemplak, Sleman, Yogyakarta",
                         style: AppTheme.actionS,
                       ),
                     ],
-                  )
+                  ),
                 ],
               ),
             ),
@@ -201,38 +189,61 @@ class HomeScreen extends StatelessWidget {
                     splashColor: AppTheme.accentColor,
                     borderRadius: BorderRadius.circular(10),
                     onTap: () => buttonStatus.activeRoomIndex(index),
-                    child: Obx(() => Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: Room(
-                            name: roomName[index],
-                            isActive:
-                                index == buttonStatus.activeRoomIndex.value,
-                          ),
-                        )),
+                    child: Obx(
+                      () => Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Room(
+                          name: roomName[index],
+                          isActive: index == buttonStatus.activeRoomIndex.value,
+                        ),
+                      ),
+                    ),
                   );
                 },
               ),
             ),
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 18),
-                child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 18.0,
-                    mainAxisSpacing: 18.0,
-                    childAspectRatio: 1,
+            Obx(() {
+              if (deviceC.devices.isEmpty) {
+                return Expanded(
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.devices, size: 64, color: Colors.grey),
+                        SizedBox(height: 16),
+                        Text('Belum ada device'),
+                        Text('Tambahkan device pertama Anda'),
+                      ],
+                    ),
                   ),
-                  itemCount: 6,
-                  itemBuilder: (context, index) {
-                    return Device(
-                      icon: Icons.lightbulb_outline,
-                      name: "Device ${index + 1}",
-                    );
-                  },
+                );
+              }
+
+              final devicesByRoom = deviceC.devicesByRoom;
+
+              return Expanded(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 18),
+                  child: GridView.builder(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 18.0,
+                          mainAxisSpacing: 18.0,
+                          childAspectRatio: 1,
+                        ),
+                    itemCount: 6,
+                    itemBuilder: (context, index) {
+                      return Device(
+                        icon: Icons.lightbulb_outline,
+                        name: "Device ${index + 1}",
+                      );
+                    },
+                  ),
                 ),
-              ),
-            ),
+              );
+            }),
+
             Container(
               margin: EdgeInsets.only(bottom: 20),
               padding: const EdgeInsets.symmetric(horizontal: 22),
@@ -243,7 +254,7 @@ class HomeScreen extends StatelessWidget {
                   Get.toNamed(RouteNamed.addDevice);
                 },
               ),
-            )
+            ),
           ],
         ),
       ),
