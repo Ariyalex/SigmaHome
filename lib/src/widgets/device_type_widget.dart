@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:sigma_home/src/theme/theme.dart';
 
-class DeviceType extends StatelessWidget {
+class DeviceTypeWidget extends StatelessWidget {
   final IconData icon;
   final String name;
   final bool isActive;
 
-  DeviceType({
+  DeviceTypeWidget({
     super.key,
     required this.icon,
     required this.name,
@@ -27,20 +27,11 @@ class DeviceType extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Icon(
-                  icon,
-                  color: Colors.white,
-                  weight: 3,
-                  size: 70,
-                ),
-                Text(
-                  name,
-                  style: AppTheme.h4.copyWith(
-                    color: Colors.white,
-                  ),
-                ),
+                Icon(icon, color: Colors.white, weight: 3, size: 70),
+                Text(name, style: AppTheme.h4.copyWith(color: Colors.white)),
               ],
-            ))
+            ),
+          )
         : Container(
             height: 115,
             width: 105,
@@ -52,17 +43,10 @@ class DeviceType extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Icon(
-                  icon,
-                  color: AppTheme.iconColor,
-                  weight: 3,
-                  size: 70,
-                ),
+                Icon(icon, color: AppTheme.iconColor, weight: 3, size: 70),
                 Text(
                   name,
-                  style: AppTheme.h4.copyWith(
-                    color: AppTheme.iconColor,
-                  ),
+                  style: AppTheme.h4.copyWith(color: AppTheme.iconColor),
                 ),
               ],
             ),

@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:sigma_home/src/bindings/add_device_binding.dart';
+import 'package:sigma_home/src/bindings/device_binding.dart';
 import 'package:sigma_home/src/middleware/auth_middleware.dart';
 import 'package:sigma_home/src/middleware/guest_middleware.dart';
 import 'package:sigma_home/src/routes/route_named.dart';
@@ -20,6 +21,7 @@ class AppPage {
     GetPage(
       name: RouteNamed.homeScreen,
       page: () => HomeScreen(),
+      binding: DeviceBinding(),
       middlewares: [AuthMiddleware()],
     ),
     GetPage(

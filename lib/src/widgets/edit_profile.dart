@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:sigma_home/src/theme/theme.dart';
-import 'package:sigma_home/src/widgets/photo_profile.dart';
 import 'package:sigma_home/src/widgets/text_field_support.dart';
 
 class EditProfile extends StatefulWidget {
@@ -41,13 +40,8 @@ class _EditProfileState extends State<EditProfile> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  "Edit Profile",
-                  style: AppTheme.h2,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
+                Text("Edit Profile", style: AppTheme.h2),
+                SizedBox(height: 10),
                 TextFieldSupport(
                   labelText: "New Name",
                   hintText: "new name",
@@ -55,60 +49,8 @@ class _EditProfileState extends State<EditProfile> {
                   controller: TextEditingController(),
                   keyboardType: TextInputType.name,
                 ),
-                SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  padding: EdgeInsets.symmetric(vertical: 24, horizontal: 12),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: Color(0xffF8F9FE),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      PhotoProfile(
-                        size: 70,
-                        borderRadius: 32,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          OutlinedButton.icon(
-                            style: ButtonStyle(
-                              side: WidgetStateProperty.all(
-                                const BorderSide(
-                                  color: AppTheme.primaryColor,
-                                  width: 1.5,
-                                ),
-                              ),
-                              shape: WidgetStateProperty.all(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                              ),
-                            ),
-                            onPressed: () {},
-                            label: Text("Pick New Profile"),
-                            icon: Icon(Icons.person),
-                          ),
-                          Text(
-                            "File: Prabowo x teddy.png",
-                            style: AppTheme.actionS.copyWith(fontSize: 12),
-                          ),
-                          Text(
-                            "Size: 2.5 MB",
-                            style: AppTheme.actionS.copyWith(
-                              fontSize: 12,
-                              color: AppTheme.primaryColor,
-                            ),
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 20),
+                SizedBox(height: 10),
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   spacing: 12,
@@ -149,10 +91,7 @@ class _EditProfileState extends State<EditProfile> {
     return GestureDetector(
       onTap: () => _showEditDialog(context),
       child: ListTile(
-        leading: Icon(
-          Icons.edit_square,
-          color: AppTheme.iconColor,
-        ),
+        leading: Icon(Icons.edit_square, color: AppTheme.iconColor),
         title: Text("Edit Profile"),
       ),
     );
