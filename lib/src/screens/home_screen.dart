@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sigma_home/src/controllers/auth_controller.dart';
 import 'package:sigma_home/src/controllers/device_controller.dart';
-import 'package:sigma_home/src/providers/button_provider.dart';
+import 'package:sigma_home/src/controllers/filter_controller.dart';
+import 'package:sigma_home/src/controllers/room_controller.dart';
 import 'package:sigma_home/src/routes/route_named.dart';
 import 'package:sigma_home/src/theme/theme.dart';
-import 'package:sigma_home/src/widgets/device.dart';
+import 'package:sigma_home/src/widgets/detail_device.dart';
+import 'package:sigma_home/src/widgets/device_widget.dart';
 import 'package:sigma_home/src/widgets/edit_profile.dart';
 import 'package:sigma_home/src/widgets/fill_button.dart';
 import 'package:sigma_home/src/widgets/filter_button.dart';
@@ -14,26 +16,15 @@ import 'package:sigma_home/src/widgets/room.dart';
 import 'package:sigma_home/src/widgets/search.dart';
 import 'package:weather_icons/weather_icons.dart';
 
-//dummy
-List<String> roomName = [
-  "Living room",
-  "Living room",
-  "Terace",
-  "Bathroom",
-  "Kitchen",
-  "Bed room",
-];
-
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final buttonStatus = Get.put(ButtonProvider());
+    final buttonStatus = Get.put(RoomController());
     final authC = Get.find<AuthController>();
     final deviceC = Get.find<DeviceController>();
-
-    final searchC = TextEditingController();
+    final filterC = Get.find<FilterController>();
 
     final mediaQueryWidth = MediaQuery.of(context).size.width;
     final mediaQueryHeight = MediaQuery.of(context).size.height;
@@ -163,48 +154,61 @@ class HomeScreen extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Flexible(flex: 3, child: FilterButton()),
+                  Flexible(flex: 4, child: FilterButton()),
                   Flexible(
-                    flex: 6,
+                    flex: 7,
                     child: Search(
                       icon: Icon(Icons.search),
                       hint: "Search Device",
-                      textController: searchC,
-                      onPressed: () {},
+                      onPressed: () {
+                        FocusScope.of(context).unfocus();
+                      },
                     ),
                   ),
                 ],
               ),
             ),
-            Container(
-              width: mediaQueryWidth,
-              height: 40,
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: roomName.length,
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  return InkWell(
-                    splashColor: AppTheme.accentColor,
-                    borderRadius: BorderRadius.circular(10),
-                    onTap: () => buttonStatus.activeRoomIndex(index),
-                    child: Obx(
-                      () => Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Room(
-                          name: roomName[index],
-                          isActive: index == buttonStatus.activeRoomIndex.value,
+            Obx(() {
+              final roomNames = ['All', ...deviceC.roomNames];
+
+              if (roomNames.length <= 1) {
+                return const SizedBox.shrink();
+              }
+
+              return Container(
+                width: mediaQueryWidth,
+                height: 40,
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: roomNames.length,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    final roomName = roomNames[index];
+                    return InkWell(
+                      splashColor: AppTheme.accentColor,
+                      borderRadius: BorderRadius.circular(10),
+                      onTap: () => buttonStatus.selectedRoom(index, roomName),
+
+                      child: Obx(
+                        () => Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Room(
+                            name: roomName,
+                            isActive:
+                                index == buttonStatus.activeRoomIndex.value,
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                },
-              ),
-            ),
+                    );
+                  },
+                ),
+              );
+            }),
+
             Obx(() {
               if (deviceC.devices.isEmpty) {
-                return Expanded(
+                return const Expanded(
                   child: Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -219,7 +223,44 @@ class HomeScreen extends StatelessWidget {
                 );
               }
 
-              final devicesByRoom = deviceC.devicesByRoom;
+              final selectedRoom = buttonStatus.selectedRoomName.value;
+
+              final roomFilteredDevices =
+                  selectedRoom.isEmpty || selectedRoom == 'All'
+                  ? deviceC.devices
+                  : deviceC.devices
+                        .where((device) => device.roomName == selectedRoom)
+                        .toList();
+
+              final finalFilteredDevices = filterC.filterDevices(
+                roomFilteredDevices,
+              );
+
+              debugPrint("🏠 Room filter: $selectedRoom");
+              debugPrint("🔍 Additional filters: ${filterC.filterSummary}");
+              debugPrint(
+                "📱 Final devices count: ${finalFilteredDevices.length}",
+              );
+
+              if (finalFilteredDevices.isEmpty) {
+                return Expanded(
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.devices,
+                          size: 64,
+                          color: AppTheme.onDefaultColor,
+                        ),
+                        const SizedBox(height: 16),
+                        Text("Tidak ada device di $selectedRoom"),
+                        const Text("Tambahkan device untuk ruangan ini"),
+                      ],
+                    ),
+                  ),
+                );
+              }
 
               return Expanded(
                 child: Container(
@@ -232,11 +273,66 @@ class HomeScreen extends StatelessWidget {
                           mainAxisSpacing: 18.0,
                           childAspectRatio: 1,
                         ),
-                    itemCount: 6,
+                    itemCount: finalFilteredDevices.length,
                     itemBuilder: (context, index) {
-                      return Device(
-                        icon: Icons.lightbulb_outline,
-                        name: "Device ${index + 1}",
+                      final device = finalFilteredDevices[index];
+                      return InkWell(
+                        borderRadius: BorderRadius.circular(10),
+                        onLongPress: () {
+                          Get.defaultDialog(
+                            title: "Hapus device",
+                            content: Text("Yakin hapus device?"),
+                            cancel: TextButton(
+                              onPressed: () {
+                                Get.back();
+                              },
+                              child: const Text("Tidak"),
+                            ),
+                            confirm: FilledButton(
+                              onPressed: () async {
+                                Get.back();
+
+                                Get.dialog(
+                                  const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                  barrierDismissible: false,
+                                );
+
+                                try {
+                                  deviceC.deleteDevice(device.id);
+                                  Get.back();
+                                } catch (e) {
+                                  Get.back();
+
+                                  Get.snackbar(
+                                    'Gagal menghapus device',
+                                    'Terjadi kesalahan: $e',
+                                    snackPosition: SnackPosition.TOP,
+                                    backgroundColor: AppTheme.errorColor,
+                                    colorText: AppTheme.surfaceColor,
+                                  );
+                                }
+                              },
+                              child: const Text("Ya"),
+                            ),
+                          );
+                        },
+                        onDoubleTap: () async {
+                          await showModalBottomSheet<Map<String, dynamic>>(
+                            context: context,
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            builder: (context) => DetailDevice(device: device),
+                          );
+                        },
+                        child: DeviceWidget(
+                          icon: device.deviceType.icon,
+                          name: device.name,
+                          roomName: device.roomName,
+                          isOn: device.deviceStatus,
+                          onToggle: () => deviceC.toggleDeviceStatus(device.id),
+                        ),
                       );
                     },
                   ),

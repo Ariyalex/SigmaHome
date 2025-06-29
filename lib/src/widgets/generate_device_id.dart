@@ -2,18 +2,20 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:sigma_home/src/providers/add_device.dart';
+import 'package:sigma_home/src/controllers/add_device_controller.dart';
 import 'package:sigma_home/src/theme/theme.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class GenerateDeviceId extends StatelessWidget {
-  GenerateDeviceId({super.key});
-  final addDevice = Get.find<AddDeviceProvider>();
+  const GenerateDeviceId({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final addDeviceC = Get.find<AddDeviceController>();
+
     return Container(
-      padding: EdgeInsets.all(22),
+      margin: EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.all(22),
       decoration: BoxDecoration(
         color: AppTheme.accentColor,
         borderRadius: BorderRadius.circular(8),
@@ -23,38 +25,45 @@ class GenerateDeviceId extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         spacing: 10,
         children: [
-          RichText(
-            text: TextSpan(
-              children: [
-                const TextSpan(text: "Device ID: ", style: AppTheme.bodyL),
-                TextSpan(
-                  text: addDevice.generatedId.value,
-                  style: AppTheme.bodyL.copyWith(color: AppTheme.primaryColor),
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () {
-                      Clipboard.setData(
-                        ClipboardData(text: addDevice.generatedId.value),
-                      );
-                      Get.snackbar(
-                        'Berhasil disalin',
-                        'Id: ${addDevice.generatedId.value}',
-                        backgroundColor: AppTheme.sucessColor,
-                        colorText: Colors.white,
-                      );
-                    },
-                ),
-              ],
+          // Device ID Display
+          Obx(
+            () => RichText(
+              text: TextSpan(
+                children: [
+                  const TextSpan(text: "Device ID: ", style: AppTheme.bodyL),
+                  TextSpan(
+                    text: addDeviceC.generatedId.value,
+                    style: AppTheme.bodyL.copyWith(
+                      color: AppTheme.primaryColor,
+                    ),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        Clipboard.setData(
+                          ClipboardData(text: addDeviceC.generatedId.value),
+                        );
+                        Get.snackbar(
+                          'Berhasil disalin',
+                          'Id: ${addDeviceC.generatedId.value}',
+                          backgroundColor: AppTheme.sucessColor,
+                          colorText: Colors.white,
+                        );
+                      },
+                  ),
+                ],
+              ),
             ),
           ),
-          Text(
+
+          const Text(
             "Gunakan Device ID ini untuk code microcontroller",
             style: AppTheme.bodyM,
           ),
+
           RichText(
             text: TextSpan(
               children: [
                 TextSpan(
-                  text: "Contoh code Micorcontroller ada di ",
+                  text: "Contoh code Microcontroller ada di ",
                   style: AppTheme.actionS.copyWith(color: Colors.black),
                 ),
                 TextSpan(
@@ -72,18 +81,54 @@ class GenerateDeviceId extends StatelessWidget {
               ],
             ),
           ),
-          FilledButton(
-            onPressed: () async {
-              try {
-                await addDevice.addDevice();
-              } catch (error) {
-                Get.snackbar('Error', error.toString());
-              }
-            },
-            child: Text("Create Device"),
-            style: ButtonStyle(
-              shape: WidgetStateProperty.all(
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+
+          // ✅ Create Device Button dengan loading state
+          Obx(
+            () => SizedBox(
+              width: double.infinity,
+              child: FilledButton(
+                onPressed:
+                    addDeviceC.canAddDevice && !addDeviceC.isLoading.value
+                    ? () async {
+                        try {
+                          debugPrint("🔥 Creating device...");
+                          await addDeviceC.addDevice();
+                          debugPrint("✅ Device created successfully");
+                        } catch (error) {
+                          debugPrint("❌ Error creating device: $error");
+                          Get.snackbar(
+                            'Error',
+                            error.toString(),
+                            backgroundColor: Colors.red,
+                            colorText: Colors.white,
+                          );
+                        }
+                      }
+                    : null,
+                style: ButtonStyle(
+                  shape: WidgetStateProperty.all(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
+                child: addDeviceC.isLoading.value
+                    ? const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          Text("Creating..."),
+                        ],
+                      )
+                    : const Text("Create Device"),
               ),
             ),
           ),

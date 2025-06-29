@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:sigma_home/src/models/device_type.dart';
 import 'package:sigma_home/src/theme/theme.dart';
 import 'package:sigma_home/src/widgets/my_switch.dart';
 
 class FilterModal extends StatefulWidget {
-  const FilterModal({super.key});
+  final String? initialDeviceType;
+  final bool? initialActiveOnly;
+  const FilterModal({
+    super.key,
+    this.initialDeviceType,
+    this.initialActiveOnly,
+  });
 
   @override
   State<FilterModal> createState() => _FilterModalState();
@@ -11,16 +18,21 @@ class FilterModal extends StatefulWidget {
 
 class _FilterModalState extends State<FilterModal> {
   // State variables for filter selections
-  final List<String> _deviceTypes = [
-    'All',
-    'Lights',
-    'AC',
-    'TV',
-    'Speaker',
-    'Router'
-  ];
+
   String _selectedDeviceType = 'All';
   bool _showActiveOnly = false;
+
+  List<String> get deviceTypesList {
+    return ["All", ...DeviceType.values.map((type) => type.displayName)];
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _selectedDeviceType = widget.initialDeviceType ?? 'All';
+    _showActiveOnly = widget.initialActiveOnly ?? false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,10 +50,7 @@ class _FilterModalState extends State<FilterModal> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    "Filter Devices",
-                    style: AppTheme.h2,
-                  ),
+                  Text("Filter Devices", style: AppTheme.h2),
                   IconButton(
                     icon: const Icon(Icons.close),
                     onPressed: () => Navigator.of(context).pop(),
@@ -55,10 +64,7 @@ class _FilterModalState extends State<FilterModal> {
             // Device Type Filter section
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-              child: Text(
-                "Device Type",
-                style: AppTheme.h4,
-              ),
+              child: Text("Device Type", style: AppTheme.h4),
             ),
 
             // Device type chips
@@ -66,19 +72,23 @@ class _FilterModalState extends State<FilterModal> {
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
               child: Wrap(
                 spacing: 8,
-                children: _deviceTypes.map((type) {
+                children: deviceTypesList.map((type) {
                   return FilterChip(
                     label: Text(type),
                     selected: _selectedDeviceType == type,
                     onSelected: (selected) {
                       setState(() {
-                        _selectedDeviceType = type;
+                        _selectedDeviceType = selected ? type : 'All';
                       });
                     },
                     backgroundColor: Colors.grey[200],
                     selectedColor: AppTheme.accentColor,
                     checkmarkColor: AppTheme.primaryColor,
-                    labelStyle: TextStyle(color: AppTheme.textColor),
+                    labelStyle: TextStyle(
+                      color: _selectedDeviceType == type
+                          ? AppTheme.primaryColor
+                          : AppTheme.textColor,
+                    ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
@@ -93,20 +103,15 @@ class _FilterModalState extends State<FilterModal> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    "Show Active Devices Only",
-                    style: AppTheme.bodyM,
-                  ),
+                  Text("Show Active Devices Only", style: AppTheme.bodyM),
                   Myswitch(
                     isOn: _showActiveOnly,
                     onChanged: (value) {
-                      setState(
-                        () {
-                          _showActiveOnly = value;
-                        },
-                      );
+                      setState(() {
+                        _showActiveOnly = value;
+                      });
                     },
-                  )
+                  ),
                 ],
               ),
             ),

@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:sigma_home/src/controllers/filter_controller.dart';
 import 'package:sigma_home/src/theme/theme.dart';
 
 class Search extends StatefulWidget {
-  final Icon icon;
-  final VoidCallback onPressed;
-  final TextEditingController textController;
-  final String? hint;
+  final Widget icon;
+  final String hint;
+  final VoidCallback? onPressed;
 
   const Search({
     super.key,
     required this.icon,
-    required this.onPressed,
-    required this.textController,
-    this.hint,
+    required this.hint,
+    this.onPressed,
   });
 
   @override
@@ -20,62 +20,67 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
-  // Create a FocusNode to manage focus
-  late FocusNode _focusNode;
+  late TextEditingController textController;
+  final filterC = Get.find<FilterController>();
 
   @override
   void initState() {
     super.initState();
-    // Initialize the focus node
-    _focusNode = FocusNode();
+    textController = TextEditingController();
+
+    // ✅ Sync dengan FilterController RxString
+    ever(filterC.searchQuery, (String query) {
+      if (textController.text != query) {
+        textController.text = query;
+      }
+    });
   }
 
   @override
   void dispose() {
-    // Clean up the focus node when the widget is disposed
-    _focusNode.dispose();
+    textController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
-        color: const Color(0xffF8F9FE),
+        color: AppTheme.accentColor,
+        borderRadius: BorderRadius.circular(12),
       ),
-      child: Row(
-        children: [
-          IconButton(
-            icon: widget.icon,
-            onPressed: widget.onPressed,
-            color: AppTheme.textColor,
+      child: TextField(
+        controller: textController,
+        decoration: InputDecoration(
+          hintText: widget.hint,
+          hintStyle: AppTheme.bodyM.copyWith(color: AppTheme.defaultTextColor),
+          prefixIcon: widget.icon,
+          suffixIcon:
+              // ✅ Reactive clear button
+              filterC.hasSearchQuery
+              ? IconButton(
+                  icon: const Icon(Icons.clear, color: AppTheme.onDefaultColor),
+                  onPressed: () {
+                    filterC.clearSearch();
+                  },
+                )
+              : const SizedBox.shrink(),
+          border: InputBorder.none,
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 12,
           ),
-          Expanded(
-            child: TextField(
-              autofocus: false,
-              focusNode: _focusNode, // Use the properly managed focus node
-              controller: widget.textController,
-              keyboardType: TextInputType.text,
-              decoration: InputDecoration(
-                hintText: widget.hint,
-                border: InputBorder.none,
-                hintStyle: const TextStyle(
-                  color: AppTheme.defaultTextColor,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                ),
-                contentPadding: const EdgeInsets.symmetric(vertical: 15),
-              ),
-              style: const TextStyle(
-                color: AppTheme.textColor,
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-          ),
-        ],
+        ),
+        onChanged: (value) {
+          // ✅ Update FilterController RxString
+          filterC.setSearchQuery(value);
+        },
+        onSubmitted: (value) {
+          filterC.setSearchQuery(value);
+          if (widget.onPressed != null) {
+            widget.onPressed!();
+          }
+        },
       ),
     );
   }

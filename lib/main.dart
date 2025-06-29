@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sigma_home/firebase_options.dart';
 import 'package:sigma_home/src/controllers/auth_controller.dart';
+import 'package:sigma_home/src/controllers/room_controller.dart';
 
 import 'src/app.dart';
 
@@ -17,11 +18,10 @@ void main() async {
   // SettingsController for changes, then passes it further down to the
   // SettingsView.
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   final authC = Get.put(AuthController(), permanent: true);
+  Get.put(RoomController());
 
   await authC.initializedAuth();
 

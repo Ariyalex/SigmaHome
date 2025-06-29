@@ -49,18 +49,13 @@ class _MyTextFieldState extends State<MyTextField> {
             width: double.infinity,
             child: Text(widget.labelText, style: AppTheme.h5),
           ),
-          const SizedBox(
-            height: 8,
-          ),
+          const SizedBox(height: 8),
           TextField(
             keyboardType: widget.keyboardType,
             controller: _textController,
             textInputAction: widget.textInputAction,
             obscureText: widget.isPassword ? _obscureText : false,
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.normal,
-            ),
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
             decoration: InputDecoration(
               hintText: widget.hintText,
               hintStyle: const TextStyle(

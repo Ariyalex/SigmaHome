@@ -19,8 +19,10 @@ class DeviceController extends GetxController {
 
   @override
   void onInit() {
-    // TODO: implement onInit
     super.onInit();
+    Future.delayed(Duration.zero, () {
+      listenToDevices();
+    });
   }
 
   String get userEmail {
@@ -45,21 +47,34 @@ class DeviceController extends GetxController {
             return;
           }
 
-          final Map<dynamic, dynamic> devicesMap =
-              data as Map<dynamic, dynamic>;
-          final List<DeviceModel> loadedDevices = [];
+          try {
+            final Map<dynamic, dynamic> devicesMap =
+                data as Map<dynamic, dynamic>;
+            final List<DeviceModel> loadedDevices = [];
 
-          devicesMap.forEach((deviceId, deviceData) {
-            if (deviceData is Map<String, dynamic>) {
-              final device = DeviceModel.fromRealtimeDB(
-                deviceId.toString(),
-                deviceData,
-              );
-              loadedDevices.add(device);
-            }
-          });
-          devices.assignAll(loadedDevices);
-          debugPrint("devices laoded: ${devices.length}");
+            devicesMap.forEach((deviceId, deviceData) {
+              try {
+                final Map<String, dynamic> properDeviceData = {};
+                if (deviceData is Map) {
+                  deviceData.forEach((key, value) {
+                    properDeviceData[key.toString()] = value;
+                  });
+                }
+                final device = DeviceModel.fromRealtimeDB(
+                  deviceId.toString(),
+                  deviceData,
+                );
+                loadedDevices.add(device);
+                debugPrint("✅ Device loaded: ${device.name}");
+              } catch (error) {
+                debugPrint("❌ Error parsing device $deviceId: $error");
+              }
+            });
+            devices.assignAll(loadedDevices);
+            debugPrint("devices laoded: ${devices.length}");
+          } catch (error) {
+            debugPrint("❌ Error processing devices data: $error");
+          }
         },
         onError: (error) {
           debugPrint("error listening to devices: $error");
@@ -73,9 +88,14 @@ class DeviceController extends GetxController {
   Future<void> addDevice(DeviceModel device) async {
     try {
       isLoading.value = true;
-
+      debugPrint("🔥 Adding device to Firebase: ${device.name}");
       await userDevicesRef.child(device.id).set(device.toRealtimeDB());
       debugPrint("device added: ${device.name}");
+
+      if (!devices.any((d) => d.id == device.id)) {
+        devices.add(device);
+        debugPrint("✅ Device added to local list: ${device.name}");
+      }
     } catch (error) {
       debugPrint("error adding device: $error");
       throw "gagal menambahkan device: $error";
@@ -140,9 +160,35 @@ class DeviceController extends GetxController {
 
   //toggle device status
   Future<void> toggleDeviceStatus(String deviceId) async {
-    final device = getDeviceById(deviceId);
-    if (device != null) {
-      await updateDeviceStatus(deviceId, !device.deviceStatus);
+    try {
+      debugPrint("🔥 Toggling device status for: $deviceId");
+
+      // ✅ Get current status from Firebase directly (more reliable)
+      final snapshot = await userDevicesRef
+          .child(deviceId)
+          .child('device_status')
+          .get();
+      final currentStatus = snapshot.value as bool? ?? false;
+
+      debugPrint("🔥 Current status from Firebase: $currentStatus");
+
+      final newStatus = !currentStatus;
+
+      debugPrint("🔥 New status will be: $newStatus");
+
+      await updateDeviceStatus(deviceId, newStatus);
+    } catch (error) {
+      debugPrint("❌ Error toggling device status: $error");
+
+      // ✅ Fallback: Use local device data
+      final device = getDeviceById(deviceId);
+      if (device != null) {
+        debugPrint("🔥 Using local device status: ${device.deviceStatus}");
+        await updateDeviceStatus(deviceId, !device.deviceStatus);
+      } else {
+        debugPrint("❌ Device not found in local list: $deviceId");
+        throw "Device tidak ditemukan";
+      }
     }
   }
 

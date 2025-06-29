@@ -15,7 +15,7 @@ class DeviceModel {
     required this.roomName,
   });
 
-  factory DeviceModel.fromRealtimeDB(String id, Map<String, dynamic> map) {
+  factory DeviceModel.fromRealtimeDB(String id, Map<dynamic, dynamic> map) {
     return DeviceModel(
       id: id,
       name: map['device_name']?.toString() ?? '',
