@@ -1,23 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
-import 'package:sigma_home/src/controllers/text_controller.dart';
 import 'package:sigma_home/src/models/device_type.dart';
-import 'package:sigma_home/src/providers/add_device.dart';
+import 'package:sigma_home/src/controllers/add_device_controller.dart';
 import 'package:sigma_home/src/theme/theme.dart';
 import 'package:sigma_home/src/widgets/device_type_widget.dart';
 import 'package:sigma_home/src/widgets/generate_device_id.dart';
 import 'package:sigma_home/src/widgets/room_selection.dart';
 import 'package:sigma_home/src/widgets/text_field_support.dart';
-
-// final List<Map<String, dynamic>> deviceTypes = [
-//   {'icon': LucideIcons.fan300, 'name': 'Kipas'},
-//   {'icon': LucideIcons.lightbulb300, 'name': 'Lampu'},
-//   {'icon': LucideIcons.tv300, 'name': 'TV'},
-//   {'icon': LucideIcons.router300, 'name': 'Router'},
-//   {'icon': LucideIcons.speaker300, 'name': 'Speaker'},
-//   {'icon': LucideIcons.washingMachine300, 'name': 'Mesin Cuci'},
-// ];
 
 class AddDevice extends StatelessWidget {
   const AddDevice({super.key});
@@ -25,7 +14,7 @@ class AddDevice extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final addDevice = Get.find<AddDeviceProvider>();
+    final addDevice = Get.find<AddDeviceController>();
 
     final mediaQueryWidth = MediaQuery.of(context).size.width;
 
@@ -127,7 +116,8 @@ class AddDevice extends StatelessWidget {
                   ? null
                   : () {
                       if (addDevice.deviceNameController.text.isNotEmpty &&
-                          addDevice.roomNameController.text.isNotEmpty) {
+                          addDevice.roomNameController.text.isNotEmpty &&
+                          addDevice.selectedDeviceType.value != null) {
                         addDevice.generateDeviceId();
                       } else {
                         Get.snackbar(

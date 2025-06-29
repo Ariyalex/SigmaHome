@@ -1,25 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:sigma_home/src/controllers/text_controller.dart';
-import 'package:sigma_home/src/providers/add_device.dart';
+import 'package:sigma_home/src/controllers/device_controller.dart';
+import 'package:sigma_home/src/controllers/add_device_controller.dart';
 import 'package:sigma_home/src/theme/theme.dart';
 import 'package:textfield_search/textfield_search.dart';
-
-List<String> roomName = [
-  "Living room",
-  "Terace",
-  "Bathroom",
-  "Kitchen",
-  "Bed room",
-];
 
 class RoomSelection extends StatelessWidget {
   const RoomSelection({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final addDeviceC = Get.find<AddDeviceC>();
-    final addDevice = Get.find<AddDeviceProvider>();
+    final addDevice = Get.find<AddDeviceController>();
+    final deviceC = Get.find<DeviceController>();
 
     return Flexible(
       child: Column(
@@ -29,7 +21,8 @@ class RoomSelection extends StatelessWidget {
         children: [
           const Text("Ruangan", style: AppTheme.h5),
           TextFieldSearch(
-            initialList: roomName,
+            initialList: deviceC.roomNames,
+            autoClear: false,
             label: "Kamar",
             controller: addDevice.roomNameController,
             textStyle: const TextStyle(

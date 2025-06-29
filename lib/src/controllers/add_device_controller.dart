@@ -7,7 +7,7 @@ import 'package:sigma_home/src/models/device_type.dart';
 import 'package:sigma_home/src/theme/theme.dart';
 import 'package:uuid/uuid.dart';
 
-class AddDeviceProvider extends GetxController {
+class AddDeviceController extends GetxController {
   // Device selection
   var selectedDeviceIndex = (-1).obs;
   final Rxn<DeviceType> selectedDeviceType = Rxn<DeviceType>();
@@ -20,6 +20,8 @@ class AddDeviceProvider extends GetxController {
   //generated id observable
   final RxString generatedId = ''.obs;
   final RxBool isGeneratingId = false.obs;
+
+  final RxBool isLoading = false.obs;
 
   final Uuid uuid = const Uuid();
 

@@ -31,10 +31,7 @@ class TextFieldSupport extends StatelessWidget {
           controller: controller,
           keyboardType: keyboardType,
         ),
-        Text(
-          suportText,
-          style: AppTheme.actionS,
-        ),
+        Text(suportText, style: AppTheme.actionS),
       ],
     );
   }
