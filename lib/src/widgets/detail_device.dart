@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sigma_home/src/controllers/detail_device_controller.dart';
 import 'package:sigma_home/src/models/device_model.dart';
+import 'package:sigma_home/src/models/device_type.dart';
 import 'package:sigma_home/src/theme/theme.dart';
+import 'package:sigma_home/src/widgets/device_type_widget.dart';
 
 class DetailDevice extends StatefulWidget {
   final DeviceModel device;
@@ -13,16 +15,19 @@ class DetailDevice extends StatefulWidget {
 }
 
 class _DetailDeviceState extends State<DetailDevice> {
-  final detailDeviceC = Get.find<DetailDeviceController>();
+  final List<DeviceType> deviceTypes = DeviceType.values;
 
   late TextEditingController deviceNameController;
   late TextEditingController roomNameController;
-
+  final detailDeviceC = Get.find<DetailDeviceController>();
   @override
   void initState() {
     super.initState();
     deviceNameController = TextEditingController(text: widget.device.name);
     roomNameController = TextEditingController(text: widget.device.roomName);
+
+    // ✅ Initialize the selected device type in controller
+    detailDeviceC.setInitialDeviceType(widget.device.deviceType);
   }
 
   @override
@@ -39,7 +44,7 @@ class _DetailDeviceState extends State<DetailDevice> {
       child: SafeArea(
         top: false,
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
           child: Column(
             spacing: 10,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -59,7 +64,127 @@ class _DetailDeviceState extends State<DetailDevice> {
                   ],
                 ),
               ),
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade50,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.grey.shade300),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      spacing: 8,
+                      children: [
+                        Text("Device ID", style: AppTheme.h4),
 
+                        SelectableText(
+                          widget.device.id,
+                          style: AppTheme.bodyM.copyWith(
+                            color: AppTheme.primaryColor,
+                          ),
+                        ),
+                        Text(
+                          "Device ID ini digunakan untuk konfigurasi microcontroller",
+                          style: AppTheme.actionS,
+                        ),
+                      ],
+                    ),
+                    IconButton(
+                      onPressed: () =>
+                          detailDeviceC.copyDeviceId(widget.device.id),
+                      icon: Icon(Icons.copy, color: AppTheme.primaryColor),
+                      tooltip: "Copy Device ID",
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: AppTheme.accentColor,
+                ),
+                padding: EdgeInsets.symmetric(vertical: 12, horizontal: 18),
+                height: 190,
+                child: Column(
+                  children: [
+                    // ✅ Header with edit button
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Device Type", style: AppTheme.h4),
+                        Obx(
+                          () => IconButton(
+                            onPressed: detailDeviceC.isSaving.value
+                                ? null
+                                : () {
+                                    if (detailDeviceC.isEditingType.value) {
+                                      // ✅ Save the selected device type
+                                      detailDeviceC.saveDeviceType(
+                                        widget.device.id,
+                                        detailDeviceC.selectedDeviceType.value,
+                                      );
+                                    } else {
+                                      detailDeviceC.isEditingType.value = true;
+                                    }
+                                  },
+                            icon:
+                                detailDeviceC.isSaving.value &&
+                                    detailDeviceC.isEditingType.value
+                                ? const SizedBox(
+                                    width: 16,
+                                    height: 16,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                : Icon(
+                                    detailDeviceC.isEditingType.value
+                                        ? Icons.check
+                                        : Icons.edit,
+                                    color: AppTheme.primaryColor,
+                                  ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    // ✅ Device type list - Reactive
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: deviceTypes.length,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) {
+                          return Container(
+                            margin: EdgeInsets.only(right: 10),
+                            child: GestureDetector(
+                              onTap: () {
+                                // ✅ Only allow selection when editing
+                                if (detailDeviceC.isEditingType.value) {
+                                  detailDeviceC.updateSelectedDeviceType(
+                                    deviceTypes[index],
+                                  );
+                                }
+                              },
+                              child: Obx(
+                                () => DeviceTypeWidget(
+                                  icon: deviceTypes[index].icon,
+                                  name: deviceTypes[index].displayName,
+                                  isActive:
+                                      detailDeviceC.selectedDeviceType.value ==
+                                      deviceTypes[index],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
               // Device type chips
               Container(
                 padding: const EdgeInsets.all(16),
@@ -126,7 +251,7 @@ class _DetailDeviceState extends State<DetailDevice> {
                             ),
                           ),
                           onSubmitted: (_) => detailDeviceC.saveDeviceName(
-                            roomNameController.text,
+                            deviceNameController.text,
                             widget.device.id,
                           ),
                         );
@@ -218,44 +343,6 @@ class _DetailDeviceState extends State<DetailDevice> {
                     }),
 
                     const SizedBox(height: 8),
-                  ],
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade50,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.grey.shade300),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      spacing: 8,
-                      children: [
-                        Text("Device ID", style: AppTheme.h4),
-
-                        SelectableText(
-                          widget.device.id,
-                          style: AppTheme.bodyM.copyWith(
-                            color: AppTheme.primaryColor,
-                          ),
-                        ),
-                        Text(
-                          "Device ID ini digunakan untuk konfigurasi microcontroller",
-                          style: AppTheme.actionS,
-                        ),
-                      ],
-                    ),
-                    IconButton(
-                      onPressed: () =>
-                          detailDeviceC.copyDeviceId(widget.device.id),
-                      icon: Icon(Icons.copy, color: AppTheme.primaryColor),
-                      tooltip: "Copy Device ID",
-                    ),
                   ],
                 ),
               ),

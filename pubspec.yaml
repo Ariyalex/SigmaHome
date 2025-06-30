@@ -12,20 +12,24 @@ environment:
 dependencies:
   cloud_firestore: ^5.6.9
   dropdown_search: ^6.0.2
+  dynamic_weather_icons: ^1.2.0
   firebase_auth: ^5.6.0
   firebase_core: ^3.13.0
   firebase_database: ^11.3.5
   flutter:
     sdk: flutter
   font_awesome_flutter: ^10.8.0
+  geocoding: ^4.0.0
+  geolocator: ^14.0.1
   get: ^4.7.2
-  google_sign_in: ^6.2.2
+  google_sign_in: ^7.0.0
   lucide_icons_flutter: ^3.0.5
   modal_bottom_sheet: ^3.0.0
   shared_preferences: ^2.5.3
   textfield_search: ^0.11.1
   url_launcher: ^6.3.1
   uuid: ^4.5.1
+  weather: ^3.2.1
   weather_icons: ^3.0.0
 
 dev_dependencies:

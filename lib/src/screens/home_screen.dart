@@ -1,9 +1,12 @@
+import 'package:dynamic_weather_icons/dynamic_weather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:sigma_home/src/controllers/auth_controller.dart';
 import 'package:sigma_home/src/controllers/device_controller.dart';
 import 'package:sigma_home/src/controllers/filter_controller.dart';
 import 'package:sigma_home/src/controllers/room_controller.dart';
+import 'package:sigma_home/src/controllers/weather_controller.dart';
 import 'package:sigma_home/src/routes/route_named.dart';
 import 'package:sigma_home/src/theme/theme.dart';
 import 'package:sigma_home/src/widgets/detail_device.dart';
@@ -14,7 +17,6 @@ import 'package:sigma_home/src/widgets/filter_button.dart';
 import 'package:sigma_home/src/widgets/log_out_button.dart';
 import 'package:sigma_home/src/widgets/room.dart';
 import 'package:sigma_home/src/widgets/search.dart';
-import 'package:weather_icons/weather_icons.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -25,6 +27,7 @@ class HomeScreen extends StatelessWidget {
     final authC = Get.find<AuthController>();
     final deviceC = Get.find<DeviceController>();
     final filterC = Get.find<FilterController>();
+    final weatherC = Get.find<WeatherController>();
 
     final mediaQueryWidth = MediaQuery.of(context).size.width;
     final mediaQueryHeight = MediaQuery.of(context).size.height;
@@ -123,30 +126,51 @@ class HomeScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
                 color: AppTheme.accentColor,
               ),
-              child: const Row(
-                mainAxisSize: MainAxisSize.max,
-                spacing: 22,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  BoxedIcon(
-                    WeatherIcons.day_cloudy,
-                    color: AppTheme.secondaryColor,
-                    size: 50,
-                  ),
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Cerah Berawan", style: AppTheme.h1),
-                      Text("24°C", style: AppTheme.h2),
-                      Text(
-                        "Ngemplak, Sleman, Yogyakarta",
-                        style: AppTheme.actionS,
+              child: Obx(
+                () => weatherC.isLoading.value
+                    ? SizedBox(
+                        width: mediaQueryWidth,
+                        height: 100,
+                        child: Center(child: CircularProgressIndicator()),
+                      )
+                    : Row(
+                        mainAxisSize: MainAxisSize.max,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Icon(
+                            WeatherIcon.getIcon(weatherC.weatherIcon.value),
+                            color: AppTheme.secondaryColor,
+                            size: 50,
+                          ),
+                          SizedBox(
+                            width: mediaQueryWidth / 1.7,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  GetUtils.capitalize(
+                                    weatherC.weatheraStatus.value,
+                                  ).toString(),
+                                  style: AppTheme.h1,
+                                ),
+                                Text(
+                                  weatherC.celcius.value,
+                                  style: AppTheme.h2,
+                                ),
+                                Text(
+                                  GetUtils.capitalize(
+                                    weatherC.locations.value,
+                                  ).toString(),
+                                  style: AppTheme.actionS,
+                                  overflow: TextOverflow.visible,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ],
               ),
             ),
             Padding(
@@ -319,10 +343,13 @@ class HomeScreen extends StatelessWidget {
                           );
                         },
                         onDoubleTap: () async {
-                          await showModalBottomSheet<Map<String, dynamic>>(
+                          await showMaterialModalBottomSheet<
+                            Map<String, dynamic>
+                          >(
+                            expand: true,
                             context: context,
-                            isScrollControlled: true,
                             backgroundColor: Colors.transparent,
+                            useRootNavigator: true,
                             builder: (context) => DetailDevice(device: device),
                           );
                         },
