@@ -69,18 +69,9 @@ class _LogOutButtonState extends State<LogOutButton> {
     return GestureDetector(
       onTap: () => _logOut(),
       child: const ListTile(
-        leading: Icon(
-          Icons.logout,
-          color: AppTheme.errorColor,
-        ),
-        title: Text(
-          "Log out",
-          style: TextStyle(
-            color: AppTheme.errorColor,
-          ),
-        ),
+        leading: Icon(Icons.logout, color: AppTheme.errorColor),
+        title: Text("Log out", style: TextStyle(color: AppTheme.errorColor)),
       ),
     );
-    ;
   }
 }

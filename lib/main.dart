@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:sigma_home/firebase_options.dart';
 import 'package:sigma_home/src/controllers/auth_controller.dart';
 import 'package:sigma_home/src/controllers/room_controller.dart';
+import 'package:sigma_home/src/controllers/weather_controller.dart';
 
 import 'src/app.dart';
 
@@ -24,6 +25,8 @@ void main() async {
   Get.put(RoomController());
 
   await authC.initializedAuth();
+
+  Get.put(WeatherController());
 
   runApp(MyApp());
 }

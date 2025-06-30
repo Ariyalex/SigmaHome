@@ -1,12 +1,12 @@
-import 'dart:ffi';
+import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sigma_home/firebase_options.dart';
 import 'package:sigma_home/src/models/user_model.dart';
 
 class AuthController extends GetxController {
@@ -23,10 +23,11 @@ class AuthController extends GetxController {
   final Rxn<UserModel> userData = Rxn<UserModel>();
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
+  final List<String> scopes = <String>['email', 'profile'];
 
-  final CollectionReference _userCollection =
-      FirebaseFirestore.instance.collection("users");
+  final CollectionReference _userCollection = FirebaseFirestore.instance
+      .collection("users");
 
   final Rxn<User> _user = Rxn<User>();
 
@@ -59,26 +60,24 @@ class AuthController extends GetxController {
       }
 
       // Dengarkan perubahan status autentikasi
-      _auth.authStateChanges().listen(
-        (User? firebaseUser) async {
-          if (firebaseUser != null &&
-              (_user.value == null || _user.value?.uid != firebaseUser.uid)) {
-            // Jika ada user baru login, update user dan preferences
-            _user.value = firebaseUser;
-            debugPrint("auth state changed: user = ${firebaseUser.uid}");
+      _auth.authStateChanges().listen((User? firebaseUser) async {
+        if (firebaseUser != null &&
+            (_user.value == null || _user.value?.uid != firebaseUser.uid)) {
+          // Jika ada user baru login, update user dan preferences
+          _user.value = firebaseUser;
+          debugPrint("auth state changed: user = ${firebaseUser.uid}");
 
-            await _saveUserToPreferences(firebaseUser);
+          await _saveUserToPreferences(firebaseUser);
 
-            // Ambil data user dari Firestore
-            await getUserData(_user.value!.uid);
-          } else if (firebaseUser == null && _user.value != null) {
-            // Jika user logout, reset user
-            _user.value = null;
-            print("auth state changed: user logged out");
-            userData.value = null;
-          }
-        },
-      );
+          // Ambil data user dari Firestore
+          await getUserData(_user.value!.uid);
+        } else if (firebaseUser == null && _user.value != null) {
+          // Jika user logout, reset user
+          _user.value = null;
+          print("auth state changed: user logged out");
+          userData.value = null;
+        }
+      });
 
       _initialized.value = true;
     } catch (error) {
@@ -121,13 +120,16 @@ class AuthController extends GetxController {
 
   Future<void> getUserData(String uid) async {
     try {
-      QuerySnapshot snapshot =
-          await _userCollection.where("uid", isEqualTo: uid).get();
+      QuerySnapshot snapshot = await _userCollection
+          .where("uid", isEqualTo: uid)
+          .get();
 
       if (snapshot.docs.isNotEmpty) {
         final data = snapshot.docs.first.data() as Map<String, dynamic>;
-        userData.value =
-            UserModel(uid: data["uid"], username: data["username"]);
+        userData.value = UserModel(
+          uid: data["uid"],
+          username: data["username"],
+        );
         debugPrint("User data loaded: ${userData.value?.username}");
       } else {
         userData.value = null;
@@ -143,7 +145,9 @@ class AuthController extends GetxController {
   Future<void> signIn(String email, String password) async {
     try {
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
-          email: email, password: password);
+        email: email,
+        password: password,
+      );
 
       _user.value = userCredential.user;
 
@@ -218,21 +222,24 @@ class AuthController extends GetxController {
   Future<void> signInWithGoogle() async {
     try {
       isLoadingGoogle.value = true;
+      await _googleSignIn.initialize(
+        clientId: DefaultFirebaseOptions.android.androidClientId,
+        serverClientId: DefaultFirebaseOptions.serverClientId,
+      );
 
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      final GoogleSignInAccount googleUser = await _googleSignIn.authenticate();
 
-      if (googleUser == null) {
-        throw "Login dibatalkan pengguna";
-      }
+      await googleUser.authorizationClient.authorizeServer(scopes);
 
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth = googleUser.authentication;
 
       final AuthCredential credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
+        idToken: googleAuth.idToken,
+      );
 
-      UserCredential userCredential =
-          await _auth.signInWithCredential(credential);
+      UserCredential userCredential = await _auth.signInWithCredential(
+        credential,
+      );
 
       _user.value = userCredential.user;
 
@@ -253,19 +260,8 @@ class AuthController extends GetxController {
 
         debugPrint("Google Sign-In berhasil: ${_user.value!.email}");
       }
-    } on PlatformException catch (error) {
-      String errorMessage;
-      if (error.code == 'sign_in_failed') {
-        if (error.message?.contains('10') == true) {
-          errorMessage =
-              "Konfigurasi Google Sign-In belum benar. Hubungi developer.";
-        } else {
-          errorMessage = "Gagal login dengan Google. Coba lagi.";
-        }
-      } else {
-        errorMessage = "Error: ${error.message}";
-      }
-      throw errorMessage;
+    } on GoogleSignInException catch (error) {
+      throw '${error.description}';
     } catch (error) {
       throw "Gagal login menggunakan Google: $error";
     } finally {
