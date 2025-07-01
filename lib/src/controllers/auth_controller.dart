@@ -164,6 +164,7 @@ class AuthController extends GetxController {
       }
 
       await getUserData(_user.value!.uid);
+      username.text = userData.value!.username;
     } on FirebaseAuthException catch (error) {
       String errorMessage;
 
@@ -254,14 +255,20 @@ class AuthController extends GetxController {
         await pref.setBool("hasLoggedIn", true);
         await pref.setString("userId", _user.value!.uid);
 
-        // Simpan/Update di Firestore
-        await _userCollection.doc(googleUser.email).set({
-          "uid": _user.value!.uid,
-          "username": googleUser.displayName ?? "User",
-        }, SetOptions(merge: true));
-
         // Get user data
         await getUserData(_user.value!.uid);
+        username.text = userData.value!.username;
+
+        // Simpan/Update di Firestore
+        if (userData.value!.username.isEmpty) {
+          await _userCollection.doc(googleUser.email).set({
+            "uid": _user.value!.uid,
+            "username": googleUser.displayName ?? "User",
+          }, SetOptions(merge: true));
+
+          await getUserData(_user.value!.uid);
+          username.text = userData.value!.username;
+        }
 
         debugPrint("Google Sign-In berhasil: ${_user.value!.email}");
       }
@@ -278,13 +285,20 @@ class AuthController extends GetxController {
     try {
       await _auth.signOut();
       await _googleSignIn.signOut();
-      _user.value = null;
-      userData.value = null;
 
       //clear preferences
       SharedPreferences pref = await SharedPreferences.getInstance();
       await pref.setBool("hasLoggedIn", false);
       await pref.remove("userId");
+
+      _user.value = null;
+      userData.value = null;
+
+      //clear auth textcontroller
+      email.text = "";
+      password.text = "";
+      confirmPass.text = "";
+      username.text = "";
     } catch (error) {
       throw ("error saat logout: $error");
     }
