@@ -8,8 +8,12 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sigma_home/firebase_options.dart';
 import 'package:sigma_home/src/models/user_model.dart';
+import 'package:sigma_home/src/theme/theme.dart';
 
 class AuthController extends GetxController {
+  final Rxn<UserModel> userData = Rxn<UserModel>();
+
+  String? dataUsername;
   //text editing controller
   final email = TextEditingController();
   final password = TextEditingController();
@@ -19,8 +23,6 @@ class AuthController extends GetxController {
   RxnBool terms = RxnBool();
   RxBool isLoading = false.obs;
   RxBool isLoadingGoogle = false.obs;
-
-  final Rxn<UserModel> userData = Rxn<UserModel>();
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
@@ -54,6 +56,9 @@ class AuthController extends GetxController {
 
         // Ambil data user dari Firestore
         await getUserData(_user.value!.uid);
+
+        dataUsername = userData.value?.username;
+        username.text = dataUsername.toString();
       } else {
         // Jika belum login, coba load user dari preferences
         await _loadUserFromPreferences();
@@ -298,6 +303,35 @@ class AuthController extends GetxController {
           "Terjadi kesalahan saat mengirim email reset password.";
     } catch (error) {
       rethrow;
+    }
+  }
+
+  Future<void> changeUsername(String newName) async {
+    try {
+      await _userCollection.doc(user!.email!.trim()).update({
+        "username": newName,
+      });
+
+      if (userData.value != null) {
+        userData.update((val) {
+          val?.username = newName;
+        });
+      }
+      print(userData.value?.username);
+
+      Get.snackbar(
+        "Error!",
+        "Berhasil mengganti username ke ${userData.value?.username}",
+        backgroundColor: AppTheme.sucessColor,
+        colorText: AppTheme.surfaceColor,
+      );
+    } catch (error) {
+      Get.snackbar(
+        "Error!",
+        error.toString(),
+        backgroundColor: AppTheme.errorColor,
+        colorText: AppTheme.surfaceColor,
+      );
     }
   }
 }

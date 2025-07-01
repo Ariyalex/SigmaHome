@@ -29,8 +29,8 @@ class HomeScreen extends StatelessWidget {
     final filterC = Get.find<FilterController>();
     final weatherC = Get.find<WeatherController>();
 
-    final mediaQueryWidth = MediaQuery.of(context).size.width;
-    final mediaQueryHeight = MediaQuery.of(context).size.height;
+    final mediaQueryWidth = Get.width;
+    final mediaQueryHeight = Get.height;
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -46,11 +46,27 @@ class HomeScreen extends StatelessWidget {
               ), // Burger Icon
               onSelected: (value) {
                 if (value == "device") {
-                  Get.toNamed(RouteNamed.addDevice);
-                } else if (value == "profile") {
-                  // _logout(context);
+                  try {
+                    Get.toNamed(RouteNamed.addDevice);
+                  } catch (error) {
+                    Get.snackbar(
+                      "error",
+                      error.toString(),
+                      backgroundColor: AppTheme.errorColor,
+                      colorText: AppTheme.surfaceColor,
+                    );
+                  }
                 } else if (value == "about") {
-                  // clearAllData(context);
+                  try {
+                    Get.toNamed(RouteNamed.about);
+                  } catch (error) {
+                    Get.snackbar(
+                      "error",
+                      error.toString(),
+                      backgroundColor: AppTheme.errorColor,
+                      colorText: AppTheme.surfaceColor,
+                    );
+                  }
                 }
               },
 
@@ -102,9 +118,11 @@ class HomeScreen extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'Hello ${authC.userData.value?.username ?? 'default'}',
-                        style: AppTheme.h1,
+                      Obx(
+                        () => Text(
+                          'Hello ${authC.userData.value?.username ?? 'default'}',
+                          style: AppTheme.h1,
+                        ),
                       ),
                       Text(
                         "Welcome to SigmaHome",
@@ -131,7 +149,7 @@ class HomeScreen extends StatelessWidget {
                     ? SizedBox(
                         width: mediaQueryWidth,
                         height: 100,
-                        child: Center(child: CircularProgressIndicator()),
+                        child: const Center(child: CircularProgressIndicator()),
                       )
                     : Row(
                         mainAxisSize: MainAxisSize.max,
@@ -231,7 +249,36 @@ class HomeScreen extends StatelessWidget {
             }),
 
             Obx(() {
-              if (deviceC.devices.isEmpty) {
+              //loading pertamakali
+              if (deviceC.devices.isEmpty &&
+                  deviceC.isLoading.value == true &&
+                  deviceC.isInitialized.value == false) {
+                return Expanded(
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            AppTheme.primaryColor,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          "Loading devices...",
+                          style: AppTheme.bodyL.copyWith(
+                            color: AppTheme.onDefaultColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }
+
+              if (deviceC.devices.isEmpty &&
+                  deviceC.isLoading.value == false &&
+                  deviceC.isInitialized.value == true) {
                 return const Expanded(
                   child: Center(
                     child: Column(
@@ -266,20 +313,22 @@ class HomeScreen extends StatelessWidget {
                 "📱 Final devices count: ${finalFilteredDevices.length}",
               );
 
-              if (finalFilteredDevices.isEmpty) {
+              if (finalFilteredDevices.isEmpty && deviceC.isInitialized.value) {
                 return Expanded(
                   child: Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.devices,
                           size: 64,
                           color: AppTheme.onDefaultColor,
                         ),
                         const SizedBox(height: 16),
                         Text("Tidak ada device di $selectedRoom"),
-                        const Text("Tambahkan device untuk ruangan ini"),
+                        const Text(
+                          "Coba ubah filter atau tambahkan device baru",
+                        ),
                       ],
                     ),
                   ),

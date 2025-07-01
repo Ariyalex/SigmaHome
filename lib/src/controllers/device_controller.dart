@@ -11,7 +11,10 @@ class DeviceController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   final RxList<DeviceModel> devices = <DeviceModel>[].obs;
-  final RxBool isLoading = false.obs;
+
+  //loading state
+  RxBool isLoading = false.obs;
+  RxBool isInitialized = false.obs;
 
   //stream subscription
   StreamSubscription<DatabaseEvent>? _devicesSubsciription;
@@ -19,9 +22,7 @@ class DeviceController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    Future.delayed(Duration.zero, () {
-      listenToDevices();
-    });
+    _initializeDevices();
   }
 
   String get userEmail {
@@ -34,8 +35,29 @@ class DeviceController extends GetxController {
     return _database.child(userEmail);
   }
 
+  Future<void> _initializeDevices() async {
+    try {
+      isLoading.value = true;
+      debugPrint("🔄 Initializing device data...");
+
+      // Start listening to device changes
+      await listenToDevices();
+
+      // Wait a bit to ensure first data load
+      await Future.delayed(const Duration(milliseconds: 1000));
+
+      isInitialized.value = true;
+      debugPrint("✅ Device controller initialized");
+    } catch (error) {
+      debugPrint("❌ Error initializing devices: $error");
+      isInitialized.value = true; // Still set to true to show error state
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
   //listen to real-time changes
-  void listenToDevices() {
+  Future<void> listenToDevices() async {
     try {
       _devicesSubsciription = userDevicesRef.onValue.listen(
         (DatabaseEvent event) {

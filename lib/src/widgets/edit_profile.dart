@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:sigma_home/src/controllers/auth_controller.dart';
 import 'package:sigma_home/src/theme/theme.dart';
 import 'package:sigma_home/src/widgets/text_field_support.dart';
 
@@ -10,21 +12,7 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
-  late TextEditingController nameController;
-
-  @override
-  void initState() {
-    super.initState();
-    nameController = TextEditingController(text: "current name");
-    print("controller dibuat");
-  }
-
-  @override
-  void dispose() {
-    nameController.dispose();
-    print("controller dihapus");
-    super.dispose();
-  }
+  final authC = Get.find<AuthController>();
 
   void _showEditDialog(BuildContext context) {
     showDialog(
@@ -46,7 +34,7 @@ class _EditProfileState extends State<EditProfile> {
                   labelText: "New Name",
                   hintText: "new name",
                   suportText: "*Ganti nama menjadi nama yang baru",
-                  controller: TextEditingController(),
+                  controller: authC.username,
                   keyboardType: TextInputType.name,
                 ),
                 SizedBox(height: 10),
@@ -56,13 +44,13 @@ class _EditProfileState extends State<EditProfile> {
                   spacing: 12,
                   children: [
                     TextButton(
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () => Get.back(),
                       child: const Text('Cancel'),
                     ),
                     FilledButton(
-                      onPressed: () {
+                      onPressed: () async {
                         // Handle save logic
-                        Navigator.pop(context);
+                        await authC.changeUsername(authC.username.text);
                       },
                       style: ButtonStyle(
                         shape: WidgetStateProperty.all(

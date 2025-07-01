@@ -8,8 +8,8 @@ import 'package:sigma_home/src/widgets/generate_device_id.dart';
 import 'package:sigma_home/src/widgets/room_selection.dart';
 import 'package:sigma_home/src/widgets/text_field_support.dart';
 
-class AddDevice extends StatelessWidget {
-  const AddDevice({super.key});
+class AddDeviceScreen extends StatelessWidget {
+  const AddDeviceScreen({super.key});
   final List<DeviceType> deviceTypes = DeviceType.values;
 
   @override
@@ -27,7 +27,7 @@ class AddDevice extends StatelessWidget {
           onPressed: () {
             Get.back();
           },
-          icon: Icon(Icons.arrow_back_ios, color: AppTheme.primaryColor),
+          icon: const Icon(Icons.arrow_back_ios, color: AppTheme.primaryColor),
         ),
       ),
       body: SingleChildScrollView(
