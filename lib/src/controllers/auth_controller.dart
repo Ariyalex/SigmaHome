@@ -55,7 +55,7 @@ class AuthController extends GetxController {
         await pref.setString("userId", currentUser.uid);
 
         // Ambil data user dari Firestore
-        await getUserData(_user.value!.uid);
+        await getUserData(_user.value!.email!);
 
         dataUsername = userData.value?.username;
         username.text = dataUsername.toString();
@@ -75,7 +75,7 @@ class AuthController extends GetxController {
           await _saveUserToPreferences(firebaseUser);
 
           // Ambil data user dari Firestore
-          await getUserData(_user.value!.uid);
+          await getUserData(_user.value!.email!);
         } else if (firebaseUser == null && _user.value != null) {
           // Jika user logout, reset user
           _user.value = null;
@@ -123,14 +123,12 @@ class AuthController extends GetxController {
     }
   }
 
-  Future<void> getUserData(String uid) async {
+  Future<void> getUserData(String email) async {
     try {
-      QuerySnapshot snapshot = await _userCollection
-          .where("uid", isEqualTo: uid)
-          .get();
+      DocumentSnapshot snapshot = await _userCollection.doc(email).get();
 
-      if (snapshot.docs.isNotEmpty) {
-        final data = snapshot.docs.first.data() as Map<String, dynamic>;
+      if (snapshot.exists) {
+        final data = snapshot.data() as Map<String, dynamic>;
         userData.value = UserModel(
           uid: data["uid"],
           username: data["username"],
@@ -163,8 +161,9 @@ class AuthController extends GetxController {
         debugPrint("user id saved to preferences; ${_user.value!.uid}");
       }
 
-      await getUserData(_user.value!.uid);
+      await getUserData(_user.value!.email!);
       username.text = userData.value!.username;
+      terms.value = false;
     } on FirebaseAuthException catch (error) {
       String errorMessage;
 
@@ -185,7 +184,7 @@ class AuthController extends GetxController {
       }
       throw errorMessage;
     } catch (error) {
-      throw ("terjadi kesalahan yang tidak diketahui");
+      throw ("terjadi kesalahan yang tidak diketahui: $error");
     }
   }
 
@@ -200,6 +199,10 @@ class AuthController extends GetxController {
         "uid": userCredential.user!.uid,
         "username": username,
       });
+
+      await signIn(email, password);
+
+      print(userData);
     } on FirebaseAuthException catch (error) {
       String errorMessage;
 
@@ -220,7 +223,7 @@ class AuthController extends GetxController {
       }
       throw errorMessage;
     } catch (error) {
-      throw ("terjadi kesalahan yang tidak diketahui");
+      throw ("terjadi kesalahan yang tidak diketahui: $error");
     }
   }
 
@@ -256,7 +259,7 @@ class AuthController extends GetxController {
         await pref.setString("userId", _user.value!.uid);
 
         // Get user data
-        await getUserData(_user.value!.uid);
+        await getUserData(_user.value!.email!);
         username.text = userData.value!.username;
 
         // Simpan/Update di Firestore
@@ -266,12 +269,14 @@ class AuthController extends GetxController {
             "username": googleUser.displayName ?? "User",
           }, SetOptions(merge: true));
 
-          await getUserData(_user.value!.uid);
+          await getUserData(_user.value!.email!);
           username.text = userData.value!.username;
         }
 
         debugPrint("Google Sign-In berhasil: ${_user.value!.email}");
       }
+
+      terms.value = false;
     } on GoogleSignInException catch (error) {
       throw '${error.description}';
     } catch (error) {

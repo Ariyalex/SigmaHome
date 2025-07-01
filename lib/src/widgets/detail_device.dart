@@ -163,7 +163,8 @@ class _DetailDeviceState extends State<DetailDevice> {
                               onTap: () {
                                 // ✅ Only allow selection when editing
                                 if (detailDeviceC.isEditingType.value) {
-                                  detailDeviceC.updateSelectedDeviceType(
+                                  detailDeviceC.saveDeviceType(
+                                    widget.device.id,
                                     deviceTypes[index],
                                   );
                                 }
