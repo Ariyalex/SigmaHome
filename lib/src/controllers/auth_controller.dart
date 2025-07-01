@@ -8,8 +8,12 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sigma_home/firebase_options.dart';
 import 'package:sigma_home/src/models/user_model.dart';
+import 'package:sigma_home/src/theme/theme.dart';
 
 class AuthController extends GetxController {
+  final Rxn<UserModel> userData = Rxn<UserModel>();
+
+  String? dataUsername;
   //text editing controller
   final email = TextEditingController();
   final password = TextEditingController();
@@ -19,8 +23,6 @@ class AuthController extends GetxController {
   RxnBool terms = RxnBool();
   RxBool isLoading = false.obs;
   RxBool isLoadingGoogle = false.obs;
-
-  final Rxn<UserModel> userData = Rxn<UserModel>();
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
@@ -54,6 +56,9 @@ class AuthController extends GetxController {
 
         // Ambil data user dari Firestore
         await getUserData(_user.value!.uid);
+
+        dataUsername = userData.value?.username;
+        username.text = dataUsername.toString();
       } else {
         // Jika belum login, coba load user dari preferences
         await _loadUserFromPreferences();
@@ -159,6 +164,7 @@ class AuthController extends GetxController {
       }
 
       await getUserData(_user.value!.uid);
+      username.text = userData.value!.username;
     } on FirebaseAuthException catch (error) {
       String errorMessage;
 
@@ -249,14 +255,20 @@ class AuthController extends GetxController {
         await pref.setBool("hasLoggedIn", true);
         await pref.setString("userId", _user.value!.uid);
 
-        // Simpan/Update di Firestore
-        await _userCollection.doc(googleUser.email).set({
-          "uid": _user.value!.uid,
-          "username": googleUser.displayName ?? "User",
-        }, SetOptions(merge: true));
-
         // Get user data
         await getUserData(_user.value!.uid);
+        username.text = userData.value!.username;
+
+        // Simpan/Update di Firestore
+        if (userData.value!.username.isEmpty) {
+          await _userCollection.doc(googleUser.email).set({
+            "uid": _user.value!.uid,
+            "username": googleUser.displayName ?? "User",
+          }, SetOptions(merge: true));
+
+          await getUserData(_user.value!.uid);
+          username.text = userData.value!.username;
+        }
 
         debugPrint("Google Sign-In berhasil: ${_user.value!.email}");
       }
@@ -273,13 +285,20 @@ class AuthController extends GetxController {
     try {
       await _auth.signOut();
       await _googleSignIn.signOut();
-      _user.value = null;
-      userData.value = null;
 
       //clear preferences
       SharedPreferences pref = await SharedPreferences.getInstance();
       await pref.setBool("hasLoggedIn", false);
       await pref.remove("userId");
+
+      _user.value = null;
+      userData.value = null;
+
+      //clear auth textcontroller
+      email.text = "";
+      password.text = "";
+      confirmPass.text = "";
+      username.text = "";
     } catch (error) {
       throw ("error saat logout: $error");
     }
@@ -298,6 +317,35 @@ class AuthController extends GetxController {
           "Terjadi kesalahan saat mengirim email reset password.";
     } catch (error) {
       rethrow;
+    }
+  }
+
+  Future<void> changeUsername(String newName) async {
+    try {
+      await _userCollection.doc(user!.email!.trim()).update({
+        "username": newName,
+      });
+
+      if (userData.value != null) {
+        userData.update((val) {
+          val?.username = newName;
+        });
+      }
+      print(userData.value?.username);
+
+      Get.snackbar(
+        "Error!",
+        "Berhasil mengganti username ke ${userData.value?.username}",
+        backgroundColor: AppTheme.sucessColor,
+        colorText: AppTheme.surfaceColor,
+      );
+    } catch (error) {
+      Get.snackbar(
+        "Error!",
+        error.toString(),
+        backgroundColor: AppTheme.errorColor,
+        colorText: AppTheme.surfaceColor,
+      );
     }
   }
 }
