@@ -11,7 +11,8 @@ class GuestMiddleware extends GetMiddleware {
   RouteSettings? redirect(String? route) {
     final authC = Get.find<AuthController>();
 
-    if (authC.user != null) {
+    // ✅ Use isLoggedin getter instead of user object
+    if (authC.isLoggedin) {
       return const RouteSettings(name: RouteNamed.homeScreen);
     }
 

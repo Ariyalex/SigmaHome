@@ -1,8 +1,12 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+import 'package:sigma_home/firebase_options.dart';
+import 'package:sigma_home/src/controllers/auth_controller.dart';
 import 'package:sigma_home/src/controllers/device_controller.dart';
-import 'package:sigma_home/src/models/device_type.dart'; // ✅ Add import for DeviceType
+import 'package:sigma_home/src/models/device_type.dart';
 import 'package:sigma_home/src/theme/theme.dart';
 
 class DetailDeviceController extends GetxController {
@@ -13,24 +17,57 @@ class DetailDeviceController extends GetxController {
   Rx<DeviceType> selectedDeviceType =
       DeviceType.lamp.obs; // ✅ Observable for selected device type
 
+  String get userEmail {
+    final authController = Get.find<AuthController>();
+    final email = authController.currentUserEmail;
+    if (email == null) throw "User not logged in";
+    return email.replaceAll(".", "_");
+  }
+
+  String get databaseUrl {
+    return DefaultFirebaseOptions.android.databaseURL!;
+  }
+
+  String get userPath {
+    return "$databaseUrl/$userEmail.json";
+  }
+
+  String get idToken {
+    final authController = Get.find<AuthController>();
+    return authController.idToken.value;
+  }
+
   Future<void> saveDeviceName(String deviceName, String deviceId) async {
-    final deviceC = Get.find<DeviceController>();
     isSaving.value = true;
 
     try {
-      await deviceC.userDevicesRef
-          .child(deviceId)
-          .child('device_name')
-          .set(deviceName);
+      final url =
+          "$databaseUrl/$userEmail/$deviceId/device_name.json?auth=$idToken";
 
-      isEditingName.value = false;
-
-      Get.snackbar(
-        'Berhasil',
-        'Nama device berhasil diperbarui',
-        backgroundColor: AppTheme.sucessColor,
-        colorText: Colors.white,
+      final response = await http.put(
+        Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(deviceName),
       );
+
+      if (response.statusCode == 200) {
+        isEditingName.value = false;
+
+        // Refresh device list
+        final deviceC = Get.find<DeviceController>();
+        await deviceC.loadDevices();
+
+        Get.snackbar(
+          'Berhasil',
+          'Nama device berhasil diperbarui',
+          backgroundColor: AppTheme.sucessColor,
+          colorText: Colors.white,
+        );
+      } else if (response.statusCode == 401) {
+        throw "Token invalid or expired";
+      } else {
+        throw "Failed to update device name: ${response.statusCode}";
+      }
     } catch (error) {
       Get.snackbar(
         'Error',
@@ -44,23 +81,36 @@ class DetailDeviceController extends GetxController {
   }
 
   Future<void> saveRoomName(String deviceId, String roomName) async {
-    final deviceC = Get.find<DeviceController>();
     isSaving.value = true;
 
     try {
-      await deviceC.userDevicesRef
-          .child(deviceId)
-          .child('room_name')
-          .set(roomName);
+      final url =
+          "$databaseUrl/$userEmail/$deviceId/room_name.json?auth=$idToken";
 
-      isEditingRoom.value = false;
-
-      Get.snackbar(
-        'Berhasil',
-        'Nama ruangan berhasil diperbarui',
-        backgroundColor: AppTheme.sucessColor,
-        colorText: Colors.white,
+      final response = await http.put(
+        Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(roomName),
       );
+
+      if (response.statusCode == 200) {
+        isEditingRoom.value = false;
+
+        // Refresh device list
+        final deviceC = Get.find<DeviceController>();
+        await deviceC.loadDevices();
+
+        Get.snackbar(
+          'Berhasil',
+          'Nama ruangan berhasil diperbarui',
+          backgroundColor: AppTheme.sucessColor,
+          colorText: Colors.white,
+        );
+      } else if (response.statusCode == 401) {
+        throw "Token invalid or expired";
+      } else {
+        throw "Failed to update room name: ${response.statusCode}";
+      }
     } catch (error) {
       Get.snackbar(
         'Error',
@@ -75,24 +125,39 @@ class DetailDeviceController extends GetxController {
 
   // ✅ Add function to save device type
   Future<void> saveDeviceType(String deviceId, DeviceType deviceType) async {
-    final deviceC = Get.find<DeviceController>();
     isSaving.value = true;
 
     try {
-      await deviceC.userDevicesRef
-          .child(deviceId)
-          .child('device_type')
-          .set(deviceType.name); // Save enum name (e.g., 'lamp', 'outlet')
+      final url =
+          "$databaseUrl/$userEmail/$deviceId/device_type.json?auth=$idToken";
 
-      selectedDeviceType.value = deviceType; // ✅ Update selected device type
-      isEditingType.value = false;
-
-      Get.snackbar(
-        'Berhasil',
-        'Tipe device berhasil diperbarui',
-        backgroundColor: AppTheme.sucessColor,
-        colorText: Colors.white,
+      final response = await http.put(
+        Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(
+          deviceType.name,
+        ), // Save enum name (e.g., 'lamp', 'outlet')
       );
+
+      if (response.statusCode == 200) {
+        selectedDeviceType.value = deviceType; // ✅ Update selected device type
+        isEditingType.value = false;
+
+        // Refresh device list
+        final deviceC = Get.find<DeviceController>();
+        await deviceC.loadDevices();
+
+        Get.snackbar(
+          'Berhasil',
+          'Tipe device berhasil diperbarui',
+          backgroundColor: AppTheme.sucessColor,
+          colorText: Colors.white,
+        );
+      } else if (response.statusCode == 401) {
+        throw "Token invalid or expired";
+      } else {
+        throw "Failed to update device type: ${response.statusCode}";
+      }
     } catch (error) {
       Get.snackbar(
         'Error',
@@ -105,11 +170,11 @@ class DetailDeviceController extends GetxController {
     }
   }
 
-  void copyDeviceId(String deviceId) {
+  void copyDeviceId(String deviceId, String pesan) {
     Clipboard.setData(ClipboardData(text: deviceId));
     Get.snackbar(
       'Berhasil',
-      'Device ID telah disalin: $deviceId',
+      pesan,
       backgroundColor: AppTheme.sucessColor,
       colorText: Colors.white,
     );
