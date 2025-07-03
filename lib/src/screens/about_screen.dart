@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:sigma_home/src/models/about_content.dart';
 import 'package:sigma_home/src/theme/theme.dart';
 import 'package:sigma_home/src/widgets/my_card.dart';
@@ -54,6 +55,35 @@ class AboutScreen extends StatelessWidget {
                       textAlign: TextAlign.center,
                       style: AppTheme.bodyM.copyWith(color: AppTheme.textColor),
                     ),
+                    RichText(
+                      textAlign: TextAlign.center,
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: "Instruksi lengkap bisa dibaca di ",
+                            style: AppTheme.bodyM.copyWith(
+                              color: AppTheme.textColor,
+                            ),
+                          ),
+                          TextSpan(
+                            text: "repository github",
+                            style: AppTheme.bodyM.copyWith(
+                              decoration: TextDecoration.underline,
+                              fontSize: 14,
+                              color: AppTheme.primaryColor,
+                            ),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                launchUrl(
+                                  Uri.parse(
+                                    'https://github.com/Ariyalex/SigmaHome',
+                                  ),
+                                );
+                              },
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -85,7 +115,7 @@ class AboutScreen extends StatelessWidget {
                   children: List.generate(
                     (AboutContent.langkahPenggunaan["content"] as List).length,
                     (index) {
-                      if (index == 4) {
+                      if (index == 5) {
                         return ListTile(
                           leading: CircleAvatar(
                             backgroundColor: AppTheme.primaryColor,
@@ -150,6 +180,73 @@ class AboutScreen extends StatelessWidget {
                       );
                     },
                   ),
+                ),
+              ),
+              MyCardTitle(
+                title: "Kontak Developer",
+                child: Column(
+                  spacing: 10,
+                  children: [
+                    ...List.generate(
+                      (AboutContent.kontakDeveloper["link"] as List).length,
+                      (index) {
+                        return Container(
+                          decoration: BoxDecoration(
+                            color: AppTheme.surfaceColor,
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: ListTile(
+                            onTap: () {
+                              launchUrl(
+                                Uri.parse(
+                                  AboutContent.kontakDeveloper["link"][index],
+                                ),
+                              );
+                            },
+                            leading: Icon(
+                              AboutContent.kontakDeveloper["icon"][index],
+                              color: AppTheme.iconColor,
+                            ),
+                            title: Text(
+                              AboutContent
+                                  .kontakDeveloper["description"][index],
+                              style: AppTheme.actionS.copyWith(
+                                fontSize: 14,
+                                color: AppTheme.textColor,
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: AppTheme.surfaceColor,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: ListTile(
+                        onTap: () {
+                          launchUrl(
+                            Uri(
+                              scheme: 'mailto',
+                              path: 'ariya17duta@gmail.com',
+                            ),
+                          );
+                        },
+                        leading: const Icon(
+                          LucideIcons.mail,
+                          color: AppTheme.iconColor,
+                        ),
+                        title: Text(
+                          "ariya17duta@gmail.com",
+                          style: AppTheme.actionS.copyWith(
+                            fontSize: 14,
+                            color: AppTheme.textColor,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],

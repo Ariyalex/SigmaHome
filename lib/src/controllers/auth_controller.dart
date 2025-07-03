@@ -599,9 +599,7 @@ class AuthController extends GetxController {
             val?.username = newName;
           });
         }
-        debugPrint(
-          "Username updated: " + (userData.value?.username ?? newName),
-        );
+        debugPrint("Username updated: ${userData.value?.username ?? newName}");
         Get.snackbar(
           "Berhasil!",
           "Berhasil mengganti username ke ${userData.value?.username ?? newName}",
@@ -682,13 +680,11 @@ class AuthController extends GetxController {
 
       // ✅ Load additional Google OAuth data
       String? displayName = pref.getString("displayName");
-      String? photoUrl = pref.getString("photoUrl");
       String? providerId = pref.getString("providerId");
 
       debugPrint("✅ Cached user data loaded: $_cachedUserEmail");
       if (providerId == "google.com") {
         debugPrint("👥 Google user: $displayName");
-        debugPrint("📸 Photo URL: $photoUrl");
       }
     } catch (error) {
       debugPrint("❌ Error loading cached user data: $error");

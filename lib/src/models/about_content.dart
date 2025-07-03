@@ -1,3 +1,7 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+
 class AboutContent {
   static const Map<String, String> perkenalan = {
     "title": "Apa itu SigmaHome?",
@@ -11,7 +15,7 @@ class AboutContent {
     "title": "Bagaimana cara SigmaHome berkerja?",
     "content": <String>[
       "User login untuk dapat mengakses realtime database dan dapat menambahkan device",
-      "Ketika device ditambahkan, aplikasi akan generate Device ID yang nantinya akan digunakan untuk code IoT.",
+      "Ketika device ditambahkan, aplikasi akan generate Device ID yang digunakan sebagai path database yang akan digunakan untuk code IoT.",
       "Setelah rangkaian dan code sudah berhasil diatur, pengguna bisa mengontrol device secara online dan realtime menggunakan SigmaHome.",
     ],
   };
@@ -21,10 +25,27 @@ class AboutContent {
     "content": <String>[
       "Register dan login",
       "Buat device baru dan pilih rooms device",
-      "Gunakan device id yang digenerate untuk code microcontroller",
-      "Gunakan Email dan Password untuk auth pada microcontroller",
+      "double tap pada device untuk mengakses kebutuhan yang diperlukan setup microcontroller",
+      "Gunakan refresh token untuk auth pada microcontroller",
+      "Gunakan Patha Realtime Database untuk konfigurasi realtime database pada microcontroller",
       "Setup microcontoller sesuai contoh kode pada repository github",
       "Device telah dibuat dan bisa dicontroll lewat SigmaHome",
     ],
+  };
+
+  static const Map<String, dynamic> kontakDeveloper = {
+    "title": "Kontak Developer",
+    "link": <String>[
+      "https://www.instagram.com/ariyalexx/",
+      "https://www.linkedin.com/in/ariya-duta-82a400286/",
+      "https://ariyalex.github.io/",
+    ],
+    "icon": <IconData>[
+      LucideIcons.instagram,
+      LucideIcons.linkedin,
+      LucideIcons.externalLink,
+      LucideIcons.mail,
+    ],
+    "description": <String>["Instagram", "LinkedIn", "Profile"],
   };
 }

@@ -49,38 +49,45 @@ class _SearchState extends State<Search> {
         color: AppTheme.accentColor,
         borderRadius: BorderRadius.circular(12),
       ),
-      child: TextField(
-        controller: textController,
-        decoration: InputDecoration(
-          hintText: widget.hint,
-          hintStyle: AppTheme.bodyM.copyWith(color: AppTheme.defaultTextColor),
-          prefixIcon: widget.icon,
-          suffixIcon:
-              // ✅ Reactive clear button
-              filterC.hasSearchQuery
-              ? IconButton(
-                  icon: const Icon(Icons.clear, color: AppTheme.onDefaultColor),
-                  onPressed: () {
-                    filterC.clearSearch();
-                  },
-                )
-              : const SizedBox.shrink(),
-          border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 12,
+      child: Obx(
+        () => TextField(
+          controller: textController,
+          decoration: InputDecoration(
+            hintText: widget.hint,
+            hintStyle: AppTheme.bodyM.copyWith(
+              color: AppTheme.defaultTextColor,
+            ),
+            prefixIcon: widget.icon,
+            suffixIcon:
+                // ✅ Reactive clear button
+                filterC.hasSearchQuery
+                ? IconButton(
+                    icon: const Icon(
+                      Icons.clear,
+                      color: AppTheme.onDefaultColor,
+                    ),
+                    onPressed: () {
+                      filterC.clearSearch();
+                    },
+                  )
+                : const SizedBox.shrink(),
+            border: InputBorder.none,
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 12,
+            ),
           ),
+          onChanged: (value) {
+            // ✅ Update FilterController RxString
+            filterC.setSearchQuery(value);
+          },
+          onSubmitted: (value) {
+            filterC.setSearchQuery(value);
+            if (widget.onPressed != null) {
+              widget.onPressed!();
+            }
+          },
         ),
-        onChanged: (value) {
-          // ✅ Update FilterController RxString
-          filterC.setSearchQuery(value);
-        },
-        onSubmitted: (value) {
-          filterC.setSearchQuery(value);
-          if (widget.onPressed != null) {
-            widget.onPressed!();
-          }
-        },
       ),
     );
   }

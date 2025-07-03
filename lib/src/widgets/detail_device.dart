@@ -100,7 +100,7 @@ class _DetailDeviceState extends State<DetailDevice> {
                               maxLines: 2,
                             ),
                             Text(
-                              "Device ID ini digunakan untuk konfigurasi microcontroller",
+                              "Path digunakan agar microcontroller bisa mengakses database yang sesuai",
                               style: AppTheme.actionS,
                             ),
                           ],
@@ -181,7 +181,7 @@ class _DetailDeviceState extends State<DetailDevice> {
                                       color: AppTheme.primaryColor,
                                     ),
                                     overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
+                                    maxLines: 2,
                                   ),
                                 ),
                               ],
@@ -249,7 +249,7 @@ class _DetailDeviceState extends State<DetailDevice> {
                                 ),
                               ),
                               Text(
-                                "Token yang digunakan untuk mendapatkan ID Token baru ketika token lama sudah expired. Token ini memiliki masa aktif yang lebih lama.",
+                                "Token yang digunakan untuk mendapatkan ID Token baru ketika token lama sudah expired. Token ini digunakan untuk auth pada microcontroller.",
                                 style: AppTheme.bodyS.copyWith(
                                   color: Colors.blue.shade600,
                                 ),
