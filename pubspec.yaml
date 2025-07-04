@@ -1,5 +1,5 @@
 name: sigma_home
-description: "A new Flutter project."
+description: "simple smart home application with microcontroller."
 
 # Prevent accidental publishing to pub.dev.
 publish_to: 'none'
@@ -16,6 +16,7 @@ dependencies:
   firebase_auth: ^5.6.0
   firebase_core: ^3.13.0
   firebase_database: ^11.3.5
+  firebase_remote_config: ^5.4.7
   flutter:
     sdk: flutter
   font_awesome_flutter: ^10.8.0
@@ -26,6 +27,7 @@ dependencies:
   http: ^1.4.0
   lucide_icons_flutter: ^3.0.5
   modal_bottom_sheet: ^3.0.0
+  package_info_plus: ^8.3.0
   shared_preferences: ^2.5.3
   textfield_search: ^0.11.1
   url_launcher: ^6.3.1
