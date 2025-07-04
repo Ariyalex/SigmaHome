@@ -43,7 +43,8 @@ class AddDeviceController extends GetxController {
     try {
       isGeneratingId.value = true;
 
-      final username = authContoller.userData.value?.username ?? "user";
+      final username =
+          authContoller.userData.value?.username.replaceAll(" ", "") ?? "user";
 
       final uuidString = uuid.v4();
 

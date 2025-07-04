@@ -36,7 +36,7 @@ class DeviceController extends GetxController {
   }
 
   String get userPath {
-    return "$databaseUrl/$userEmail";
+    return "$databaseUrl/$userEmail.json";
   }
 
   String get idToken {
@@ -68,7 +68,7 @@ class DeviceController extends GetxController {
   /// Load devices using HTTP REST API
   Future<void> loadDevices() async {
     try {
-      final url = "$userPath.json?auth=$idToken";
+      final url = "$userPath?auth=$idToken";
 
       debugPrint("🔄 Loading devices from: $url");
 

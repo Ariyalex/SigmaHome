@@ -55,7 +55,7 @@ class GenerateDeviceId extends StatelessWidget {
           ),
 
           const Text(
-            "Gunakan Device ID ini untuk code microcontroller",
+            "Device ID digunakan untuk path database, bahan-bahan yang diperlukan untuk microcontroller ada di detail device dengan double click device",
             style: AppTheme.bodyM,
           ),
 
@@ -63,7 +63,7 @@ class GenerateDeviceId extends StatelessWidget {
             text: TextSpan(
               children: [
                 TextSpan(
-                  text: "Contoh code Microcontroller ada di ",
+                  text: "Detail instruksi ada di readme ",
                   style: AppTheme.actionS.copyWith(color: Colors.black),
                 ),
                 TextSpan(

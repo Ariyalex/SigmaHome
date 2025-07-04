@@ -23,6 +23,7 @@ dependencies:
   geolocator: ^14.0.1
   get: ^4.7.2
   google_sign_in: ^7.0.0
+  http: ^1.4.0
   lucide_icons_flutter: ^3.0.5
   modal_bottom_sheet: ^3.0.0
   shared_preferences: ^2.5.3

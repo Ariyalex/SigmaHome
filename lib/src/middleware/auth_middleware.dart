@@ -11,7 +11,8 @@ class AuthMiddleware extends GetMiddleware {
   RouteSettings? redirect(String? route) {
     final authController = Get.find<AuthController>();
 
-    final isLoggedIn = authController.user != null;
+    // ✅ Use isLoggedin getter instead of user object
+    final isLoggedIn = authController.isLoggedin;
 
     if (isLoggedIn) {
       return null;
