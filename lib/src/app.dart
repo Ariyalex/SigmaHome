@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sigma_home/src/controllers/auth_controller.dart';
+import 'package:sigma_home/src/controllers/version_control.dart';
 import 'package:sigma_home/src/routes/page_route.dart';
 import 'package:sigma_home/src/routes/route_named.dart';
 import 'package:sigma_home/src/theme/theme.dart';
@@ -11,6 +12,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Get.put(VersionControl());
+
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       initialRoute: _getInitialRoute(),
