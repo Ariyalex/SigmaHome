@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sigma_home/firebase_options.dart';
 import 'package:sigma_home/src/controllers/auth_controller.dart';
 import 'package:sigma_home/src/controllers/detail_device_controller.dart';
 import 'package:sigma_home/src/models/device_model.dart';
@@ -131,38 +132,45 @@ class _DetailDeviceState extends State<DetailDevice> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Header with refresh button
+                      const Text("Authentication Tokens", style: AppTheme.h3),
+                      const SizedBox(height: 16),
+
+                      //api key
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Authentication Tokens", style: AppTheme.h3),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("API Key", style: AppTheme.h4),
+                                Obx(
+                                  () => Text(
+                                    DefaultFirebaseOptions.android.apiKey,
+                                    style: AppTheme.bodyM.copyWith(
+                                      color: AppTheme.primaryColor,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 2,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                           IconButton(
-                            onPressed: () async {
-                              try {
-                                await authC.refreshIdToken();
-                                Get.snackbar(
-                                  "Berhasil!",
-                                  "Token berhasil di-refresh",
-                                  backgroundColor: AppTheme.sucessColor,
-                                  colorText: Colors.white,
-                                );
-                              } catch (error) {
-                                Get.snackbar(
-                                  "Error!",
-                                  "Gagal refresh token: $error",
-                                  backgroundColor: AppTheme.errorColor,
-                                  colorText: Colors.white,
-                                );
-                              }
-                            },
-                            icon: Icon(
-                              Icons.refresh,
+                            onPressed: () => detailDeviceC.copyDeviceId(
+                              DefaultFirebaseOptions.android.apiKey,
+                              "Berhasil copy API Key",
+                            ),
+                            icon: const Icon(
+                              Icons.copy,
                               color: AppTheme.primaryColor,
                             ),
-                            tooltip: "Refresh Tokens",
+                            tooltip: "Copy Refresh Token",
                           ),
                         ],
                       ),
-                      const SizedBox(height: 16),
 
                       // Refresh Token
                       Row(
@@ -173,7 +181,7 @@ class _DetailDeviceState extends State<DetailDevice> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("Refresh Token", style: AppTheme.h4),
+                                const Text("Refresh Token", style: AppTheme.h4),
                                 Obx(
                                   () => Text(
                                     authC.refreshTkn.value,
@@ -192,7 +200,7 @@ class _DetailDeviceState extends State<DetailDevice> {
                               authC.refreshTkn.value,
                               "Berhasil copy refresh token",
                             ),
-                            icon: Icon(
+                            icon: const Icon(
                               Icons.copy,
                               color: AppTheme.primaryColor,
                             ),
@@ -237,6 +245,26 @@ class _DetailDeviceState extends State<DetailDevice> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           // Refresh Token Description
+                          Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "• API Key: ",
+                                style: AppTheme.bodyM.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.blue.shade700,
+                                ),
+                              ),
+                              Text(
+                                "API Key firebase yang digunakan untuk auth pada microcontroller.",
+                                style: AppTheme.bodyS.copyWith(
+                                  color: Colors.blue.shade600,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
                           Column(
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.start,
