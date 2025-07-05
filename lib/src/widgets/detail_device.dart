@@ -80,40 +80,85 @@ class _DetailDeviceState extends State<DetailDevice> {
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(color: Colors.grey.shade300),
                   ),
-                  width: Get.width,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.max,
+                    spacing: 8,
                     children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          spacing: 8,
-                          children: [
-                            Text("Path Realtime Database", style: AppTheme.h4),
-                            Text(
+                      const Text("Konfigurasi Database", style: AppTheme.h3),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text("Database URL ", style: AppTheme.h4),
+                                Text(
+                                  DefaultFirebaseOptions.android.databaseURL!,
+                                  style: AppTheme.bodyM.copyWith(
+                                    color: AppTheme.primaryColor,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                ),
+                                const Text(
+                                  "URL digunakan agar microcontroller bisa mengakses database",
+                                  style: AppTheme.actionS,
+                                ),
+                              ],
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () => detailDeviceC.copyDeviceId(
                               databasePath,
-                              style: AppTheme.bodyM.copyWith(
-                                color: AppTheme.primaryColor,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 2,
+                              "Berhasil copy path",
                             ),
-                            Text(
-                              "Path digunakan agar microcontroller bisa mengakses database yang sesuai",
-                              style: AppTheme.actionS,
+                            icon: const Icon(
+                              Icons.copy,
+                              color: AppTheme.primaryColor,
                             ),
-                          ],
-                        ),
+                            tooltip: "Copy Device ID",
+                          ),
+                        ],
                       ),
-                      IconButton(
-                        onPressed: () => detailDeviceC.copyDeviceId(
-                          databasePath,
-                          "Berhasil copy path",
-                        ),
-                        icon: Icon(Icons.copy, color: AppTheme.primaryColor),
-                        tooltip: "Copy Device ID",
+                      const SizedBox(height: 5),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text("Path ", style: AppTheme.h4),
+                                Text(
+                                  databasePath,
+                                  style: AppTheme.bodyM.copyWith(
+                                    color: AppTheme.primaryColor,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                ),
+                                const Text(
+                                  "Path digunakan agar microcontroller bisa mengakses database yang sesuai",
+                                  style: AppTheme.actionS,
+                                ),
+                              ],
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () => detailDeviceC.copyDeviceId(
+                              databasePath,
+                              "Berhasil copy path",
+                            ),
+                            icon: const Icon(
+                              Icons.copy,
+                              color: AppTheme.primaryColor,
+                            ),
+                            tooltip: "Copy Device ID",
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -144,16 +189,14 @@ class _DetailDeviceState extends State<DetailDevice> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("API Key", style: AppTheme.h4),
-                                Obx(
-                                  () => Text(
-                                    DefaultFirebaseOptions.android.apiKey,
-                                    style: AppTheme.bodyM.copyWith(
-                                      color: AppTheme.primaryColor,
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
+                                const Text("API Key", style: AppTheme.h4),
+                                Text(
+                                  DefaultFirebaseOptions.android.apiKey,
+                                  style: AppTheme.bodyM.copyWith(
+                                    color: AppTheme.primaryColor,
                                   ),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
                                 ),
                               ],
                             ),
@@ -171,7 +214,7 @@ class _DetailDeviceState extends State<DetailDevice> {
                           ),
                         ],
                       ),
-
+                      const SizedBox(height: 10),
                       // Refresh Token
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
