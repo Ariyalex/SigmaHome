@@ -1,6 +1,6 @@
 # SigmaHome
 
-Aplikasi Smart Home berbasis Flutter yang menghubungkan aplikasi mobile dengan microcontroller melalui Firebase (Realtime Database & Firestore). Mendukung ESP8266, ESP32, dan semua 32-bit MCU (kecuali Atmel AVR).
+Aplikasi Smart Home berbasis Flutter yang menghubungkan aplikasi mobile dengan microcontroller melalui Firebase (Realtime Database & Firestore). Mendukung ESP8266, ESP32, dan semua 32-bit MCU (kecuali Atmel AVR). Detail versi sigma home [disini](https://github.com/Ariyalex/SigmaHome/releases)
 
 ---
 
