@@ -17,7 +17,7 @@ class _LogOutButtonState extends State<LogOutButton> {
   void _logOut() {
     Get.defaultDialog(
       title: "Log Out",
-      content: Text("Yakin Log Out dari account"),
+      content: const Text("Yakin Log Out dari account"),
       cancel: TextButton(
         onPressed: () {
           Get.back();

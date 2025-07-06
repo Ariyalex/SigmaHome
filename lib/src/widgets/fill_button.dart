@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sigma_home/src/theme/theme.dart';
 
-enum ButtonType {
-  filled,
-  text,
-  outlined,
-}
+enum ButtonType { filled, text, outlined }
 
 class FillButton extends StatelessWidget {
   final String content;
@@ -26,14 +22,11 @@ class FillButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final commonStyle = ButtonStyle(
-        minimumSize: WidgetStateProperty.all(
-          const Size(double.infinity, 39),
-        ),
-        shape: WidgetStateProperty.all(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-        ));
+      minimumSize: WidgetStateProperty.all(const Size(double.infinity, 39)),
+      shape: WidgetStateProperty.all(
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+    );
 
     switch (buttonType) {
       case ButtonType.filled:
@@ -53,10 +46,7 @@ class FillButton extends StatelessWidget {
                     valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                   ),
                 )
-              : Text(
-                  content,
-                  style: TextStyle(color: Colors.white),
-                ),
+              : Text(content, style: const TextStyle(color: Colors.white)),
         );
       case ButtonType.text:
         return TextButton(
@@ -71,19 +61,14 @@ class FillButton extends StatelessWidget {
                     valueColor: AlwaysStoppedAnimation<Color>(color),
                   ),
                 )
-              : Text(
-                  content,
-                  style: TextStyle(color: AppTheme.primaryColor),
-                ),
+              : Text(content, style: TextStyle(color: AppTheme.primaryColor)),
         );
       case ButtonType.outlined:
         return OutlinedButton(
           onPressed: isLoading ? null : onPressed,
           style: commonStyle.copyWith(
             shape: WidgetStateProperty.all(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             ),
             side: WidgetStateProperty.all(
               BorderSide(
@@ -103,10 +88,7 @@ class FillButton extends StatelessWidget {
                     valueColor: AlwaysStoppedAnimation<Color>(color),
                   ),
                 )
-              : Text(
-                  content,
-                  style: TextStyle(color: AppTheme.primaryColor),
-                ),
+              : Text(content, style: TextStyle(color: AppTheme.primaryColor)),
         );
     }
   }

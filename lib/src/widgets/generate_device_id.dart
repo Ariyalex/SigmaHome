@@ -14,7 +14,7 @@ class GenerateDeviceId extends StatelessWidget {
     final addDeviceC = Get.find<AddDeviceController>();
 
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20),
+      margin: const EdgeInsets.symmetric(horizontal: 20),
       padding: const EdgeInsets.all(22),
       decoration: BoxDecoration(
         color: AppTheme.accentColor,

@@ -29,7 +29,7 @@ class _EditProfileState extends State<EditProfile> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text("Edit Profile", style: AppTheme.h2),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 TextFieldSupport(
                   labelText: "New Name",
                   hintText: "new name",
@@ -37,7 +37,7 @@ class _EditProfileState extends State<EditProfile> {
                   controller: authC.username,
                   keyboardType: TextInputType.name,
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -80,7 +80,7 @@ class _EditProfileState extends State<EditProfile> {
       onTap: () => _showEditDialog(context),
       child: ListTile(
         leading: Icon(Icons.edit_square, color: AppTheme.iconColor),
-        title: Text("Edit Profile"),
+        title: const Text("Edit Profile"),
       ),
     );
   }

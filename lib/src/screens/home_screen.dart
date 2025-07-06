@@ -109,7 +109,7 @@ class HomeScreen extends StatelessWidget {
           spacing: 12,
           children: [
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 40),
+              padding: const EdgeInsets.symmetric(horizontal: 40),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 mainAxisSize: MainAxisSize.max,
@@ -138,8 +138,8 @@ class HomeScreen extends StatelessWidget {
             ),
             Container(
               //container cuaca
-              margin: EdgeInsets.symmetric(horizontal: 28),
-              padding: EdgeInsets.all(15),
+              margin: const EdgeInsets.symmetric(horizontal: 28),
+              padding: const EdgeInsets.all(15),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
                 color: AppTheme.accentColor,
@@ -200,7 +200,7 @@ class HomeScreen extends StatelessWidget {
                   Flexible(
                     flex: 7,
                     child: Search(
-                      icon: Icon(Icons.search),
+                      icon: const Icon(Icons.search),
                       hint: "Search Device",
                       onPressed: () {
                         FocusScope.of(context).unfocus();
@@ -220,7 +220,7 @@ class HomeScreen extends StatelessWidget {
               return Container(
                 width: mediaQueryWidth,
                 height: 40,
-                padding: EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: roomNames.length,
@@ -354,7 +354,7 @@ class HomeScreen extends StatelessWidget {
                         onLongPress: () {
                           Get.defaultDialog(
                             title: "Hapus device",
-                            content: Text("Yakin hapus device?"),
+                            content: const Text("Yakin hapus device?"),
                             cancel: TextButton(
                               onPressed: () {
                                 Get.back();
@@ -417,11 +417,11 @@ class HomeScreen extends StatelessWidget {
             }),
 
             Container(
-              margin: EdgeInsets.only(bottom: 20),
+              margin: const EdgeInsets.only(bottom: 20),
               padding: const EdgeInsets.symmetric(horizontal: 22),
               child: FillButton(
                 content: "ADD NEW DEVICE",
-                color: Color(0xff2897FF),
+                color: const Color(0xff2897FF),
                 onPressed: () {
                   Get.toNamed(RouteNamed.addDevice);
                 },

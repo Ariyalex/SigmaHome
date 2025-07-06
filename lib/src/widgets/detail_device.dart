@@ -359,7 +359,10 @@ class _DetailDeviceState extends State<DetailDevice> {
                     borderRadius: BorderRadius.circular(10),
                     color: AppTheme.accentColor,
                   ),
-                  padding: EdgeInsets.symmetric(vertical: 12, horizontal: 18),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 12,
+                    horizontal: 18,
+                  ),
                   height: 190,
                   child: Column(
                     children: [
@@ -413,7 +416,7 @@ class _DetailDeviceState extends State<DetailDevice> {
                           scrollDirection: Axis.horizontal,
                           itemBuilder: (context, index) {
                             return Container(
-                              margin: EdgeInsets.only(right: 10),
+                              margin: const EdgeInsets.only(right: 10),
                               child: GestureDetector(
                                 onTap: () {
                                   // ✅ Only allow selection when editing

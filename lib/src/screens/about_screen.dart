@@ -29,7 +29,7 @@ class AboutScreen extends StatelessWidget {
         ),
       ),
       body: Container(
-        padding: EdgeInsets.all(26),
+        padding: const EdgeInsets.all(26),
         width: mediaQueryWidth,
         height: mediaQueryHeight,
         child: SingleChildScrollView(

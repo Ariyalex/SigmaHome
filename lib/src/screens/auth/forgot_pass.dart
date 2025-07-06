@@ -22,9 +22,12 @@ class ForgotPass extends StatelessWidget {
       await authC.resetPassword(email);
 
       Get.back();
-      Get.snackbar("Success", "Mail telah dikirm ke email!",
-          backgroundColor: AppTheme.sucessColor,
-          colorText: AppTheme.surfaceColor);
+      Get.snackbar(
+        "Success",
+        "Mail telah dikirm ke email!",
+        backgroundColor: AppTheme.sucessColor,
+        colorText: AppTheme.surfaceColor,
+      );
     } catch (error) {
       Get.snackbar(
         "Error!",
@@ -61,9 +64,10 @@ class ForgotPass extends StatelessWidget {
                 const Text(
                   "SigmaHome",
                   style: TextStyle(
-                      fontSize: 44,
-                      fontWeight: FontWeight.bold,
-                      color: AppTheme.textColor),
+                    fontSize: 44,
+                    fontWeight: FontWeight.bold,
+                    color: AppTheme.textColor,
+                  ),
                 ),
                 Column(
                   mainAxisSize: MainAxisSize.min,
@@ -71,13 +75,16 @@ class ForgotPass extends StatelessWidget {
                   children: [
                     //container untuk form
                     Container(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 24, horizontal: 28),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 24,
+                        horizontal: 28,
+                      ),
                       decoration: ShapeDecoration(
-                          color: AppTheme.accentColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadiusGeometry.circular(18),
-                          )),
+                        color: AppTheme.accentColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadiusGeometry.circular(18),
+                        ),
+                      ),
                       width: double.infinity,
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
@@ -116,9 +123,9 @@ class ForgotPass extends StatelessWidget {
                                 content: "Back?",
                                 onPressed: () => Get.back(),
                                 buttonType: ButtonType.outlined,
-                              )
+                              ),
                             ],
-                          )
+                          ),
                         ],
                       ),
                     ),

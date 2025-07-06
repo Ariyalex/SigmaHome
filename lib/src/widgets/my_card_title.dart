@@ -16,7 +16,7 @@ class MyCardTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: width,
-      padding: EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
       decoration: BoxDecoration(
         color: AppTheme.accentColor,
         borderRadius: BorderRadius.circular(16),
